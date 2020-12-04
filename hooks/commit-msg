@@ -2,16 +2,43 @@
 
 const fs = require('fs');
 
-console.log("Hello from the Hooks folder!");
+// https://www.webfx.com/tools/emoji-cheat-sheet/
+const codeToSkipValidation = "na";
+const recognizedShortMessages = new Map(); 
+recognizedShortMessages.set(codeToSkipValidation, "The characters 'na' Will be removed, allows for commit message validation to be skipped (case sensitive).");
+recognizedShortMessages.set(":bug:", "If the commit fixes a bug");
+recognizedShortMessages.set(":clap:", "If the commit contains a new feature");
 
 // The first element of process.argv is the execution path,
 // and the second is the path for the js file. If you want
 // to access the params related to git hooks, they will start at 
 // index 2!
 const pathToCommitMessage = process.argv[2];
-console.log(`Commit Message can be found at '${pathToCommitMessage}'.`);
-console.log('The commit message is as follows:');
 // Encoding has to be specified, otherwise weirdness will occur
 const message = fs.readFileSync(pathToCommitMessage, {encoding: "utf-8"});
-console.log(message);
-console.log('--------------End--------------');
+
+for (const [shortCode, _] of recognizedShortMessages) {
+    const startsWithShortCode = message.startsWith(shortCode);
+
+    if(startsWithShortCode && shortCode === codeToSkipValidation) {
+        fs.writeFileSync(pathToCommitMessage, message.substring(2).trimStart());
+    }
+
+    if(startsWithShortCode) {
+        process.exit();
+    }
+}
+
+console.log("-----------------------------");
+console.log("!! COMMIT MESSAGE REJECTED !!");
+console.log("-----------------------------");
+console.log("");
+console.log("Current Git Hooks are configured such that commit messages must start with one of the following!");
+console.log("");
+for (const [key, value] of recognizedShortMessages) {
+    console.log(`${key} ==> ${value}`);
+}
+console.log("");
+console.log("-----------------------------");
+
+process.exit(1);
