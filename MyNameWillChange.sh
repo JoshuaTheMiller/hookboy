@@ -2,4 +2,4 @@
 
 # This file gets regenerated during the hook creation process
 
-exec PathToRealHookFile
+exec PathToRealHookFile "$@"
