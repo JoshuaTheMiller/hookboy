@@ -3,13 +3,80 @@
 const fs = require('fs');
 
 // https://www.webfx.com/tools/emoji-cheat-sheet/
-const codeToSkipValidation = "na";
-const recognizedShortMessages = new Map(); 
-recognizedShortMessages.set(codeToSkipValidation, "The characters 'na' Will be removed, allows for commit message validation to be skipped (case sensitive).");
-recognizedShortMessages.set(":bug:", "If the commit fixes a bug");
-recognizedShortMessages.set(":clap:", "If the commit contains a new feature");
-recognizedShortMessages.set(":docs:", "If the commit is for documentation changes");
-recognizedShortMessages.set(":bulb:", "If the commit introduces a new feature");
+const skipValidationMessage = {
+    "category": "Skip validation",
+    "description": "The characters 'na' Will be removed, allows for commit message validation to be skipped (case sensitive).",
+    "tags": [
+        "na"
+    ]
+};
+const codeToSkipValidation = skipValidationMessage.tags[0];
+
+const recognizedShortMessages = [
+    {
+        "category": "Bug Fix",
+        "description": "The commit fixes a bug.",
+        "tags": [
+            ":bug:"
+        ]
+    },
+    {
+        "category": "New Feature",
+        "description": "The commit introduces a new feature!",
+        "tags": [
+            ":bulb:",
+            ":clap:"
+        ]
+    },
+    {
+        "category": "Documentation",
+        "description": "Only contains documentation changes.",
+        "tags": [
+            ":scroll:",
+            ":ledger:",
+            ":book:",
+            ":memo:",
+            ":pencil:"
+        ]
+    },
+    {
+        "category": "Style",
+        "description": "Modifying code style, no real changes to code flow.",
+        "tags": [
+            ":art:",
+        ]
+    },
+    {
+        "category": "Refactor",
+        "description": "Changes the code, but it doesn't seem to change from the outside.",
+        "tags": [
+            ":soon:",
+        ]
+    },
+    {
+        "category": "Test",
+        "description": "Added another test, or series of tests, to exercise the code.",
+        "tags": [
+            ":mag:",
+        ]
+    },
+    {
+        "category": "Chore",
+        "description": "Changes that do not fit in other categories, but are still needed to help maintain the codebase.",
+        "tags": [
+            ":zzz:",
+        ]
+    },
+    {
+        "category": "Break",
+        "description": "Use when introducing a change that will break consumers (hopefully rare!).",
+        "tags": [
+            ":warning:",
+            ":x:",
+            ":boom:",
+        ]
+    }
+]
 
 // tenets
 // prefer short emoji over long
@@ -32,16 +99,18 @@ recognizedShortMessages.set(":bulb:", "If the commit introduces a new feature");
 // index 2!
 const pathToCommitMessage = process.argv[2];
 // Encoding has to be specified, otherwise weirdness will occur
-const message = fs.readFileSync(pathToCommitMessage, {encoding: "utf-8"});
+const message = fs.readFileSync(pathToCommitMessage, { encoding: "utf-8" });
+const flattenedRecognized = (recognizedShortMessages.map(rsm => rsm.tags)).flat();
+flattenedRecognized.push(codeToSkipValidation); 
 
-for (const [shortCode, _] of recognizedShortMessages) {
+for (const shortCode of flattenedRecognized) {
     const startsWithShortCode = message.startsWith(shortCode);
 
-    if(startsWithShortCode && shortCode === codeToSkipValidation) {
+    if (startsWithShortCode && shortCode === codeToSkipValidation) {
         fs.writeFileSync(pathToCommitMessage, message.substring(2).trimStart());
     }
 
-    if(startsWithShortCode) {
+    if (startsWithShortCode) {
         process.exit();
     }
 }
@@ -50,10 +119,15 @@ console.log("-----------------------------");
 console.log("!! COMMIT MESSAGE REJECTED !!");
 console.log("-----------------------------");
 console.log("");
-console.log("Current Git Hooks are configured such that commit messages must start with one of the following!");
+console.log("Current Git Hooks are configured such that commit messages must start with");
+console.log("a tag from one of the following categories! To skip validation, start the");
+console.log("commit message with the characters \x1b[33mna\x1b[0m. Those characters will be removed");
+console.log("from the final message.");
 console.log("");
-for (const [key, value] of recognizedShortMessages) {
-    console.log(`${key} ==> ${value}`);
+for (const shortMessage of recognizedShortMessages) {
+    console.log(`${shortMessage.category}: ${shortMessage.description}`)        
+    const tagsToPrint = shortMessage.tags.join("\x1b[0m, \x1b[32m");
+    console.log(" | Tags --> ", "\x1b[32m", tagsToPrint, "\x1b[0m");
 }
 console.log("");
 console.log("-----------------------------");
