@@ -8,6 +8,23 @@ const recognizedShortMessages = new Map();
 recognizedShortMessages.set(codeToSkipValidation, "The characters 'na' Will be removed, allows for commit message validation to be skipped (case sensitive).");
 recognizedShortMessages.set(":bug:", "If the commit fixes a bug");
 recognizedShortMessages.set(":clap:", "If the commit contains a new feature");
+recognizedShortMessages.set(":docs:", "If the commit is for documentation changes");
+recognizedShortMessages.set(":bulb:", "If the commit introduces a new feature");
+
+// tenets
+// prefer short emoji over long
+// prefer sensible emoji
+
+// feat --> :bulb: (new idea?)
+// fix --> :bug: (bug fix :D)
+// docs --> :scroll: or :ledger: or :book: or :memo: or :pencil: (short, still represents text)
+// style --> :art: (being stylist is an artform)
+// refactor --> :soon: (soon, this codebase will be even better... Feeling sarcastic today I think)
+// test --> :mag: (inspecting via tests)
+// chore --> :zzz: (chores can be boring, but are still necessary!)
+// break --> :warning: or :x: or :boom: (something to grab attention, as this is potentially disruptive)
+
+// Yes, I did go through the entire emoji list for this...
 
 // The first element of process.argv is the execution path,
 // and the second is the path for the js file. If you want
