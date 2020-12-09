@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "Hello from the yet-another-commit-msg file! I will show up every time as an example. I have the following args: $@"
