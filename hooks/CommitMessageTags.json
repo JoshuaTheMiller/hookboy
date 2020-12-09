@@ -1,0 +1,72 @@
+{
+   "tagToAllowSkip": {
+      "category": "Skip validation",
+      "description": "The characters 'na' Will be removed, allows for commit message validation to be skipped (case sensitive).",
+      "tag": "na"
+   },
+   "standardTags": [
+      {
+         "category": "Bug Fix",
+         "description": "The commit fixes a bug.",
+         "tags": [
+            ":bug:"
+         ]
+      },
+      {
+         "category": "New Feature or Enhancement",
+         "description": "The commit introduces a new feature!",
+         "tags": [
+            ":bulb:",
+            ":clap:"
+         ]
+      },
+      {
+         "category": "Documentation",
+         "description": "Only contains documentation changes.",
+         "tags": [
+            ":scroll:",
+            ":ledger:",
+            ":book:",
+            ":memo:",
+            ":pencil:"
+         ]
+      },
+      {
+         "category": "Style",
+         "description": "Modifying code style, no real changes to code flow.",
+         "tags": [
+            ":art:"
+         ]
+      },
+      {
+         "category": "Refactor",
+         "description": "Changes the code, but it doesn't seem to change from the outside.",
+         "tags": [
+            ":soon:"
+         ]
+      },
+      {
+         "category": "Test",
+         "description": "Added another test, or series of tests, to exercise the code.",
+         "tags": [
+            ":mag:"
+         ]
+      },
+      {
+         "category": "Chore",
+         "description": "Changes that do not fit in other categories, but are still needed to help maintain the codebase.",
+         "tags": [
+            ":zzz:"
+         ]
+      },
+      {
+         "category": "Break",
+         "description": "Use when introducing a change that will break consumers (hopefully rare!).",
+         "tags": [
+            ":warning:",
+            ":x:",
+            ":boom:"
+         ]
+      }
+   ]
+}
