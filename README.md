@@ -1,10 +1,19 @@
+<div align="center">
+
 # Grapple
+
+![An image of a hook, representing the end of a grappling hook](./docs/images/hook.svg)
+
+
+</div>
+
+## Welcome!
 
 Similar to the ever popular [grappling hook](https://terraria.gamepedia.com/Hooks), Grapple is an essential tool for anyone looking to increase the mobility (i.e. shareability) of [Git Hooks](https://git-scm.com/docs/githooks). Additionally, it makes using them a ton easier!
 
 **Why should you care?** First and foremost, Git Hooks provide a way to automate your own workflows. Properly leveraging such automation provides [other benefits](#Benefits-of-Git-Hooks), such as forcing yourself to get better at commit messages, linting your source code upon commit, etc. Unfortunately, git does not offer a great out-of-box experience for maintaining, installing, and sharing Hooks. Grapple aims to provide this great experience!
 
-## What actually is Grapple?
+## So... what actually is Grapple?
 
 Currently, Grapple is a tiny command line tool that allows users to "install" Git Hooks, either from a local file, or from some file hosted out on the internet.
 
