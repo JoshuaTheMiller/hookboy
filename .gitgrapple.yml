@@ -1,0 +1,11 @@
+---
+
+# localHookDir: ./hooks
+# doNotAutoAddHooksFromLocalHookDir: false
+hooks:
+  - hookName: commit-msg
+    files:
+      - path: ./hooks/CommitMustContainValidTags.js
+        extraArguments:
+          - name: FilePath
+            value: ./hooks/CommitMessageTags.json
