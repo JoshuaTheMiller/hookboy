@@ -18,8 +18,9 @@ type hookFile struct {
 }
 
 type hooks struct {
-	HookName string     `yaml:"hookName"`
-	Files    []hookFile `yaml:"files"`
+	HookName  string     `yaml:"hookName"`
+	Statement string     `yaml:"statement"`
+	Files     []hookFile `yaml:"files"`
 }
 
 type configuration struct {

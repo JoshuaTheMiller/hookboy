@@ -24,6 +24,7 @@ var recognizedHooks = [...]string{
 	"update"}
 
 var actualGitHooksDir = ".git/hooks/"
+var grappleCacheDir = ".grapple-cache"
 
 func main() {
 	var configuration = getConfiguration()
@@ -42,6 +43,22 @@ func main() {
 		lines := []string{}
 		for _, fileToInclude := range hook.Files {
 			lines = append(lines, generateLineFromFile(fileToInclude))
+		}
+
+		if hook.Statement != "" {
+			filePath, err := generateStatementFile(hook.HookName, hook.Statement)
+
+			if err != nil {
+				log.Fatal(err)
+				return
+			}
+
+			var sb strings.Builder
+
+			sb.WriteString("exec ")
+			sb.WriteString("\"" + filePath + "\" \"$@\" ")
+
+			lines = append(lines, sb.String())
 		}
 
 		filesToCreate[hook.HookName] = lines
@@ -144,4 +161,23 @@ exit 0`
 	if err2 != nil {
 		log.Fatal(err2)
 	}
+}
+
+func generateStatementFile(fileName string, statement string) (string, error) {
+	os.MkdirAll(grappleCacheDir, os.ModePerm)
+	var filePath = grappleCacheDir + "/" + fileName + "-statement"
+	file, err := os.Create(filePath)
+
+	if err != nil {
+		log.Fatal(err)
+		return "", err
+	}
+
+	_, err2 := file.WriteString(statement)
+
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+
+	return filePath, nil
 }
