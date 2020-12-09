@@ -31,10 +31,6 @@ Under normal circumstances, to "Install" a Hook, one would have to navigate to t
    * Tip: if you think you want to block the pushing of commits to a remote, you should at least provide a helpful message as to why so the pusher can quickly fix their code.
    * Honestly, this is just a rewording of the top two reasons... Having three bullet points are nice though.
 
-## First Line
-
-`#!/usr/bin/env python`
-
 ## Available Git Hooks
 
 * applypatch-msg
@@ -58,16 +54,6 @@ Under normal circumstances, to "Install" a Hook, one would have to navigate to t
   * Needs to support setting of execution rights after downloading
 - [x] ~~Error handling in MyNameWillChange.sh~~
 - [x] ~~Rewrite CaptainHook.go as Bash?~~
-
-## Quick Notes
-
-After poking around the internet a bit more, it looks like someone already has made something similar to what I wanted (almost exactly, and for the exact same reasons): https://github.com/git-hooks/git-hooks/wiki/Thoughts
-
-They even got to the git-hooks GitHub Org! Ah well.
-
-I believe there are enough difference in what I want to do to warrant this being a fun side project. Namely, I do not wish to use symbolic links, as I have seen folks run into issues with them.
-
-I will continue this project with Go, as getting up and running with Go on any system is simple, and the footprint is tiny.
 
 ## Other Tools
 
