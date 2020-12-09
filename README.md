@@ -5,6 +5,7 @@
 ![An image of a hook, representing the end of a grappling hook](./docs/images/hook.svg)
 
 
+
 </div>
 
 ## Welcome!
@@ -51,9 +52,12 @@ Under normal circumstances, to "Install" a Hook, one would have to navigate to t
 
 ## Wants+Improvements
 
-- [ ] Error handling in MyNameWillChange.sh
-- [ ] Rewrite CaptainHook.go as Bash?
 - [ ] Have script add colons to **recognized** tags (less typing for me)
+- [ ] Support usage of files over HTTP
+  * Needs to support caching (.grapple-cache directory?)
+  * Needs to support setting of execution rights after downloading
+- [x] ~~Error handling in MyNameWillChange.sh~~
+- [x] ~~Rewrite CaptainHook.go as Bash?~~
 
 ## Quick Notes
 
