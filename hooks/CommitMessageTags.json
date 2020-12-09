@@ -16,19 +16,14 @@
          "category": "New Feature or Enhancement",
          "description": "The commit introduces a new feature!",
          "tags": [
-            ":bulb:",
-            ":clap:"
+            ":bulb:"            
          ]
       },
       {
          "category": "Documentation",
          "description": "Only contains documentation changes.",
          "tags": [
-            ":scroll:",
-            ":ledger:",
-            ":book:",
-            ":memo:",
-            ":pencil:"
+            ":memo:"
          ]
       },
       {
@@ -62,9 +57,7 @@
       {
          "category": "Break",
          "description": "Use when introducing a change that will break consumers (hopefully rare!).",
-         "tags": [
-            ":warning:",
-            ":x:",
+         "tags": [                        
             ":boom:"
          ]
       }
