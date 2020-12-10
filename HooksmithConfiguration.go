@@ -24,10 +24,9 @@ type hooks struct {
 }
 
 type configuration struct {
-	LocalHookDir                      string            `yaml:"localHookDir"`
-	DoNotAutoAddHooksFromLocalHookDir bool              `yaml:"doNotAutoAddHooksFromLocalHookDir"`
-	Hooks                             []hooks           `yaml:"hooks"`
-	HookStatements                    map[string]string `yaml:"hookStatements"`
+	LocalHookDir                      string  `yaml:"localHookDir"`
+	DoNotAutoAddHooksFromLocalHookDir bool    `yaml:"doNotAutoAddHooksFromLocalHookDir"`
+	Hooks                             []hooks `yaml:"hooks"`
 }
 
 func getConfiguration() *configuration {

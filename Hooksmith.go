@@ -24,7 +24,7 @@ var recognizedHooks = [...]string{
 	"update"}
 
 var actualGitHooksDir = ".git/hooks/"
-var grappleCacheDir = ".grapple-cache"
+var grappleCacheDir = ".hooksmith-cache"
 
 func main() {
 	var configuration = getConfiguration()
@@ -63,9 +63,6 @@ func main() {
 
 		filesToCreate[hook.HookName] = lines
 	}
-
-	// Split out generation of hook files
-	// Put something here for generating hook statements
 
 	if !configuration.DoNotAutoAddHooksFromLocalHookDir {
 		for _, f := range files {
