@@ -2,6 +2,9 @@
 
 # localHookDir: ./hooks
 # doNotAutoAddHooksFromLocalHookDir: false
+hookStatements:
+  commit-msg: "echo \"commit-msg\""
+  pre-commit: "echo \"pre-commit-msg\""
 hooks:
   - hookName: commit-msg
     # Can be excluded

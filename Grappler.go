@@ -64,6 +64,9 @@ func main() {
 		filesToCreate[hook.HookName] = lines
 	}
 
+	// Split out generation of hook files
+	// Put something here for generating hook statements
+
 	if !configuration.DoNotAutoAddHooksFromLocalHookDir {
 		for _, f := range files {
 			var potentialHookName = f.Name()
