@@ -1,0 +1,30 @@
+{
+  "name": "git-grapple",
+  "version": "0.0.1",
+  "description": "Manage Git Hooks!",
+  "main": "./out/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install && tsc && gulp build-go",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JoshuaTheMiller/Grapple"
+  },
+  "bin": {
+    "grapple": "./out/index.js"
+  },
+  "keywords": [
+    "git",
+    "hooks",
+    "go"
+  ],
+  "author": "JoshuaTheMiller",
+  "devDependencies": {
+    "@types/node": "^14.14.11",
+    "gulp": "^4.0.2",
+    "gulp-copy": "^4.0.1",
+    "typescript": "^4.1.2"
+  }
+}

@@ -3,3 +3,8 @@
 *.out
 .test_*
 coverage.txt
+bin
+out
+node_modules
+yarn.lock
+package-lock.json
