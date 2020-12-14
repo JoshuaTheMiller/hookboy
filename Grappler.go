@@ -60,7 +60,7 @@ func main() {
 }
 
 func install() (string, error) {
-	var configuration = getConfiguration()
+	var configuration = getDefaultConfiguration()
 
 	var localHooksDir = configuration.LocalHookDir
 

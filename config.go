@@ -29,7 +29,7 @@ type configuration struct {
 	Hooks                             []hooks `yaml:"hooks"`
 }
 
-func getConfiguration() *configuration {
+func getConfiguration(pathToConfig string) *configuration {
 
 	yamlFile, err := ioutil.ReadFile(".gitgrapple.yml")
 	if err != nil {
@@ -43,6 +43,10 @@ func getConfiguration() *configuration {
 	}
 
 	return c.setDefaults()
+}
+
+func getDefaultConfiguration() *configuration {
+	return getConfiguration(".gitgrapple.yml")
 }
 
 func (c *configuration) setDefaults() *configuration {
