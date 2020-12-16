@@ -23,3 +23,16 @@ func TestSum(t *testing.T) {
 		t.Errorf("Expected 1 Hook, found %d", amountOfHooksFound)
 	}
 }
+
+func TestAutoAddHooksSetToNoneProperly(t *testing.T) {
+	var configuration = getConfiguration("testConfig.yml")
+
+	if configuration.AutoAddHooks != no {
+		t.Errorf("Expected AutoAddHooks to be No")
+	}
+
+	var expectedLocalHooksDir = "./somethingElse"
+	if configuration.LocalHookDir != expectedLocalHooksDir {
+		t.Errorf("LocalHookDir, expected %s, got %s", expectedLocalHooksDir, configuration.LocalHookDir)
+	}
+}

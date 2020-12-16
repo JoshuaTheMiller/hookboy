@@ -39,7 +39,7 @@ type configuration struct {
 
 func getConfiguration(pathToConfig string) configuration {
 
-	yamlFile, err := ioutil.ReadFile(".gitgrapple.yml")
+	yamlFile, err := ioutil.ReadFile(pathToConfig)
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
 	}
