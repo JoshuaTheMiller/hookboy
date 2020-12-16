@@ -1,5 +1,0 @@
----
-
-localHookDir: ./somethingElse
-autoAddHooks: No
-hooks: []

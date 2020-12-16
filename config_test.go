@@ -24,8 +24,14 @@ func TestSum(t *testing.T) {
 	}
 }
 
+var testData1 = `
+localHookDir: ./somethingElse
+autoAddHooks: No
+hooks: []
+`
+
 func TestAutoAddHooksSetToNoneProperly(t *testing.T) {
-	var configuration = getConfiguration("testConfig.yml")
+	var configuration = deserializeConfiguration([]byte(testData1))
 
 	if configuration.AutoAddHooks != no {
 		t.Errorf("Expected AutoAddHooks to be No")
