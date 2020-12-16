@@ -23,13 +23,21 @@ type hooks struct {
 	Files     []hookFile `yaml:"files"`
 }
 
+type autoAddHooks string
+
+const (
+	no         autoAddHooks = "No"
+	byFileName autoAddHooks = "ByFileName"
+)
+
 type configuration struct {
-	LocalHookDir                      string  `yaml:"localHookDir"`
-	DoNotAutoAddHooksFromLocalHookDir bool    `yaml:"doNotAutoAddHooksFromLocalHookDir"`
-	Hooks                             []hooks `yaml:"hooks"`
+	LocalHookDir string `yaml:"localHookDir"`
+	// AutoAddHooks Defaults to ByFileName
+	AutoAddHooks autoAddHooks `yaml:"autoAddHooks"`
+	Hooks        []hooks      `yaml:"hooks"`
 }
 
-func getConfiguration(pathToConfig string) *configuration {
+func getConfiguration(pathToConfig string) configuration {
 
 	yamlFile, err := ioutil.ReadFile(".gitgrapple.yml")
 	if err != nil {
@@ -45,14 +53,18 @@ func getConfiguration(pathToConfig string) *configuration {
 	return c.setDefaults()
 }
 
-func getDefaultConfiguration() *configuration {
+func getDefaultConfiguration() configuration {
 	return getConfiguration(".gitgrapple.yml")
 }
 
-func (c *configuration) setDefaults() *configuration {
+func (c *configuration) setDefaults() configuration {
 	if c.LocalHookDir == "" {
 		c.LocalHookDir = "./hooks"
 	}
 
-	return c
+	if c.AutoAddHooks == "" {
+		c.AutoAddHooks = byFileName
+	}
+
+	return *c
 }

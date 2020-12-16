@@ -49,7 +49,7 @@ func (configuration *configuration) Install() (string, error) {
 		filesToCreate[hook.HookName] = lines
 	}
 
-	if !configuration.DoNotAutoAddHooksFromLocalHookDir {
+	if configuration.AutoAddHooks == byFileName {
 		for _, f := range files {
 			var potentialHookName = f.Name()
 

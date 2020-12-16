@@ -10,8 +10,8 @@ func Sum(x int, y int) int {
 func TestSum(t *testing.T) {
 	var configuration = getDefaultConfiguration()
 
-	if configuration.DoNotAutoAddHooksFromLocalHookDir != false {
-		t.Errorf("Expected DoNotAutoAddHooksFromLocalHookDir to be false")
+	if configuration.AutoAddHooks != byFileName {
+		t.Errorf("Expected AutoAddHooks to be byFileName")
 	}
 
 	if configuration.LocalHookDir != "./hooks" {

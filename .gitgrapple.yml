@@ -1,7 +1,7 @@
 ---
 
 # localHookDir: ./hooks
-# doNotAutoAddHooksFromLocalHookDir: false
+# autoAddHooks: ByFileName
 hooks:
   - hookName: commit-msg
     # Can be excluded
