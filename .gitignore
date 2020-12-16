@@ -1,2 +1,3 @@
 *.exe
 .grapple-cache
+*.out

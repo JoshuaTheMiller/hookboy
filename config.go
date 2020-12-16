@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -37,31 +39,36 @@ type configuration struct {
 	Hooks        []hooks      `yaml:"hooks"`
 }
 
-func getConfiguration(pathToConfig string) configuration {
+func getConfiguration(pathToConfig string) (*configuration, error) {
 
 	yamlFile, err := ioutil.ReadFile(pathToConfig)
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
+
+		var errorString = fmt.Sprintf("cannot read file '%s', please check that it is valid", pathToConfig)
+		return nil, errors.New(errorString)
 	}
 
 	return deserializeConfiguration(yamlFile)
 }
 
-func deserializeConfiguration(rawConfiguration []byte) configuration {
+func deserializeConfiguration(rawConfiguration []byte) (*configuration, error) {
 	c := &configuration{}
 	err := yaml.Unmarshal(rawConfiguration, c)
 	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
+		//log.Fatalf("Unmarshal: %v", err)
+
+		return nil, errors.New("failed to parse configuration file")
 	}
 
-	return c.setDefaults()
+	return c.setDefaults(), nil
 }
 
-func getDefaultConfiguration() configuration {
+func getDefaultConfiguration() (*configuration, error) {
 	return getConfiguration(".gitgrapple.yml")
 }
 
-func (c *configuration) setDefaults() configuration {
+func (c *configuration) setDefaults() *configuration {
 	if c.LocalHookDir == "" {
 		c.LocalHookDir = "./hooks"
 	}
@@ -70,5 +77,5 @@ func (c *configuration) setDefaults() configuration {
 		c.AutoAddHooks = byFileName
 	}
 
-	return *c
+	return c
 }

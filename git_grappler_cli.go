@@ -26,7 +26,12 @@ var actualGitHooksDir = ".git/hooks/"
 var grappleCacheDir = ".grapple-cache"
 
 func main() {
-	var grappleConfiguration = getDefaultConfiguration()
+	var grappleConfiguration, configurationError = getDefaultConfiguration()
+
+	if configurationError != nil {
+		log.Fatal(configurationError)
+		return
+	}
 
 	app := &cli.App{
 		Name:  "Grapple",
