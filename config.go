@@ -44,8 +44,12 @@ func getConfiguration(pathToConfig string) configuration {
 		log.Printf("yamlFile.Get err   #%v ", err)
 	}
 
+	return deserializeConfiguration(yamlFile)
+}
+
+func deserializeConfiguration(rawConfiguration []byte) configuration {
 	c := &configuration{}
-	err = yaml.Unmarshal(yamlFile, c)
+	err := yaml.Unmarshal(rawConfiguration, c)
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
 	}
