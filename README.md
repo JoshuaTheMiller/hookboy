@@ -4,7 +4,7 @@
 
 ![An image of a hook, representing the end of a grappling hook](./docs/images/hook.svg)
 
-
+![Go](https://github.com/JoshuaTheMiller/Grapple/workflows/Go/badge.svg) [![codecov](https://codecov.io/gh/JoshuaTheMiller/Grapple/branch/main/graph/badge.svg?token=EJ36OJYYF1)](https://codecov.io/gh/JoshuaTheMiller/Grapple)
 
 </div>
 
