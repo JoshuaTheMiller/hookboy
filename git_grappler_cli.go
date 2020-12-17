@@ -48,14 +48,16 @@ func runApp(args []string, stdout io.Writer) error {
 	}
 
 	app := &cli.App{
-		Name:  "Grapple",
-		Usage: "Git Hooks made easy!",
+		Writer: stdout,
+		Name:   "Grapple",
+		Usage:  "Git Hooks made easy!",
 		Commands: []*cli.Command{
 			{
 				Name:  "hello",
 				Usage: "Says hello!",
 				Action: func(c *cli.Context) error {
-					_, err := fmt.Println("Hello! We hope you are enjoying Grapple!")
+					var message = "Hello! We hope you are enjoying Grapple!"
+					_, err := stdout.Write([]byte(message))
 					return err
 				},
 			},
@@ -64,7 +66,7 @@ func runApp(args []string, stdout io.Writer) error {
 				Usage: "Configures local Git Hooks to adhere to the '.grapple' configuration file",
 				Action: func(c *cli.Context) error {
 					message, err := grappleConfiguration.Install()
-					fmt.Println(message)
+					stdout.Write([]byte(message))
 					return err
 				},
 			},

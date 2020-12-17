@@ -57,8 +57,7 @@ func TestCliSaysHello(t *testing.T) {
 		return
 	}
 
-	var expectedOutput = `Hello! We hope you are enjoying Grapple!
-`
+	var expectedOutput = `Hello! We hope you are enjoying Grapple!`
 	var actualOutput = string(output)
 	if actualOutput != expectedOutput {
 		t.Errorf("Output incorrect! Expected '%s', received '%s'", expectedOutput, actualOutput)
