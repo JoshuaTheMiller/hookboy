@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"github.com/urfave/cli"
@@ -43,7 +42,6 @@ func runApp(args []string, stdout io.Writer) error {
 	var grappleConfiguration, configurationError = getDefaultConfiguration()
 
 	if configurationError != nil {
-		log.Fatal(configurationError)
 		return configurationError
 	}
 
@@ -73,10 +71,5 @@ func runApp(args []string, stdout io.Writer) error {
 		},
 	}
 
-	err := app.Run(args)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return app.Run(args)
 }

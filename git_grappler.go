@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"reflect"
 	"strings"
@@ -19,7 +18,7 @@ func (configuration *configuration) Install() (string, error) {
 	files, err := ioutil.ReadDir(localHooksDir)
 
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
 	var filesToCreate = make(map[string][]string)
@@ -34,7 +33,6 @@ func (configuration *configuration) Install() (string, error) {
 			filePath, err := generateStatementFile(hook.HookName, hook.Statement)
 
 			if err != nil {
-				log.Fatal(err)
 				return "", err
 			}
 
@@ -71,7 +69,11 @@ func (configuration *configuration) Install() (string, error) {
 	}
 
 	for fileName, linesForFile := range filesToCreate {
-		createBashExecFile(fileName, linesForFile)
+		var createBashError = createBashExecFile(fileName, linesForFile)
+
+		if createBashError != nil {
+			return "", createBashError
+		}
 	}
 
 	return "Hooks installed!", nil
@@ -106,12 +108,11 @@ func generateLineFromFile(fileToInclude hookFile) string {
 	return sb.String()
 }
 
-func createBashExecFile(fileName string, linesToAdd []string) {
+func createBashExecFile(fileName string, linesToAdd []string) error {
 	file, err := os.Create(actualGitHooksDir + "/" + fileName)
 
 	if err != nil {
-		log.Fatal(err)
-		return
+		return err
 	}
 	defer file.Close()
 
@@ -147,9 +148,7 @@ exit 0`
 
 	_, err2 := file.WriteString(withConditionalInserted)
 
-	if err2 != nil {
-		log.Fatal(err2)
-	}
+	return err2
 }
 
 func generateStatementFile(fileName string, statement string) (string, error) {
@@ -158,16 +157,11 @@ func generateStatementFile(fileName string, statement string) (string, error) {
 	file, err := os.Create(filePath)
 
 	if err != nil {
-		log.Fatal(err)
 		return "", err
 	}
 	defer file.Close()
 
 	_, err2 := file.WriteString(statement)
 
-	if err2 != nil {
-		log.Fatal(err2)
-	}
-
-	return filePath, nil
+	return filePath, err2
 }
