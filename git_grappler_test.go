@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -108,5 +109,58 @@ func TestItemExists(t *testing.T) {
 
 	if !itemExists {
 		t.Error("Item existed, but not found")
+	}
+}
+
+var hookConfigurationFileForInstall = `
+autoAddHooks: No
+hooks:
+  - hookName: theActualHookName        
+    statement: echo This file was placed as a test!
+    files: [] 
+`
+
+func TestThatHooksGetInstalledProperly(t *testing.T) {
+	var hookName = "post-update"
+	var modifiedConfig = strings.Replace(hookConfigurationFileForInstall, "theActualHookName", hookName, 1)
+
+	// other tests test for configuration
+	var configuration, configError = deserializeConfiguration([]byte(modifiedConfig))
+
+	if configError != nil {
+		t.Errorf("Test config is garbage: '%s'", configError)
+		return
+	}
+
+	configuration.Install()
+
+	var filePath = fmt.Sprintf(".git/hooks/%s", hookName)
+	var contentBytes, error = ioutil.ReadFile(filePath)
+
+	if error != nil {
+		t.Errorf("File generation appears broken: %s", error.Error())
+		return
+	}
+
+	var actualContents = string(contentBytes)
+	var expectedContents = `#!/bin/sh
+retVal0=exec ".grapple-cache/post-update-statement" "$@" 
+retVal0=$?
+
+
+if [ $retVal0 -ne 0 ];
+then
+exit 1
+fi
+exit 0`
+
+	if expectedContents != actualContents {
+		t.Errorf("Generated file incorrect. Expected '%s', found '%s'", expectedContents, actualContents)
+	}
+
+	var fileRemoveError = os.Remove(filePath)
+
+	if fileRemoveError != nil {
+		t.Errorf("Test cleanup failed! Unable to remove file at '%s': '%s'", filePath, fileRemoveError.Error())
 	}
 }
