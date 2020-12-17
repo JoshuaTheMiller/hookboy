@@ -1,3 +1,4 @@
 *.exe
 .grapple-cache
 *.out
+.test_*
