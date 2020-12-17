@@ -67,3 +67,33 @@ exit 0`
 		t.Errorf("Test cleanup failed! Unable to remove file at '%s': '%s'", filePath, fileRemoveError.Error())
 	}
 }
+
+func TestGenerateStatementFileIsAsExpected(t *testing.T) {
+	var statementName = "SomeStatement"
+	var someStatement = "SomeStatement"
+
+	generateStatementFile(statementName, someStatement)
+
+	// After testing this, it is obviously not clear that the func above
+	// will generate a file at the path below...
+	var filePath = fmt.Sprintf(".grapple-cache/%s-statement", statementName)
+	var contentBytes, error = ioutil.ReadFile(filePath)
+
+	if error != nil {
+		t.Errorf("File generation appears broken: %s", error.Error())
+		return
+	}
+
+	var actualContents = string(contentBytes)
+	var expectedContents = someStatement
+
+	if expectedContents != actualContents {
+		t.Errorf("Generated file incorrect. Expected '%s', found '%s'", expectedContents, actualContents)
+	}
+
+	var fileRemoveError = os.Remove(filePath)
+
+	if fileRemoveError != nil {
+		t.Errorf("Test cleanup failed! Unable to remove file at '%s': '%s'", filePath, fileRemoveError.Error())
+	}
+}

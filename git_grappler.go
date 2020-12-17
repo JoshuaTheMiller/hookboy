@@ -160,6 +160,7 @@ func generateStatementFile(fileName string, statement string) (string, error) {
 		log.Fatal(err)
 		return "", err
 	}
+	defer file.Close()
 
 	_, err2 := file.WriteString(statement)
 
