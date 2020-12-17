@@ -30,3 +30,21 @@ func TestRunAppSaysHello(t *testing.T) {
 		t.Errorf("Output incorrect! Expected '%s', received '%s'", expectedOutput, actualOutput)
 	}
 }
+
+func TestRunAppInstallsSuccessfully(t *testing.T) {
+	// var flagToTest = "hello"
+	var args = []string{"a", "install"}
+	var byteBuffer bytes.Buffer
+	var err = runApp(args, &byteBuffer)
+
+	if err != nil {
+		t.Errorf("Command failed to run: '%s'", err)
+		return
+	}
+
+	var expectedOutput = `Hooks installed!`
+	var actualOutput = byteBuffer.String()
+	if actualOutput != expectedOutput {
+		t.Errorf("Output incorrect! Expected '%s', received '%s'", expectedOutput, actualOutput)
+	}
+}
