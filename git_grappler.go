@@ -112,6 +112,7 @@ func createBashExecFile(fileName string, linesToAdd []string) {
 		log.Fatal(err)
 		return
 	}
+	defer file.Close()
 
 	var fileTemplateString = `#!/bin/sh
 insertLinesHere
