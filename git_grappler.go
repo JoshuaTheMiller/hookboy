@@ -54,7 +54,8 @@ func (configuration *configuration) Install() (string, error) {
 			var potentialHookName = f.Name()
 
 			if itemExists(recognizedHooks, potentialHookName) {
-				var execLine = "exec \"./hooks/" + potentialHookName + "\"" + " \"$@\" "
+				execLine := "exec \"./localHooksDirToReplace/" + potentialHookName + "\"" + " \"$@\" "
+				execLine = strings.Replace(execLine, "localHooksDirToReplace", localHooksDir, 1)
 
 				currentLines, exists := filesToCreate[potentialHookName]
 
