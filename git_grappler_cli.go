@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -25,12 +26,25 @@ var recognizedHooks = [...]string{
 var actualGitHooksDir = ".git/hooks/"
 var grappleCacheDir = ".grapple-cache"
 
+const (
+	// exitFail is the exit code if the program
+	// fails.
+	exitFail = 1
+)
+
 func main() {
+	if err := runApp(os.Args, os.Stdout); err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(exitFail)
+	}
+}
+
+func runApp(args []string, stdout io.Writer) error {
 	var grappleConfiguration, configurationError = getDefaultConfiguration()
 
 	if configurationError != nil {
 		log.Fatal(configurationError)
-		return
+		return configurationError
 	}
 
 	app := &cli.App{
@@ -57,8 +71,10 @@ func main() {
 		},
 	}
 
-	err := app.Run(os.Args)
+	err := app.Run(args)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	return nil
 }
