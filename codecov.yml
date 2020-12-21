@@ -13,3 +13,6 @@ parsers:
       loop: yes
       method: no
       macro: no
+
+ignore:
+  - "main.go"
