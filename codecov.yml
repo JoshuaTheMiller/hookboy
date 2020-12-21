@@ -16,4 +16,4 @@ parsers:
 
 ignore:
   - "main.go"
-  - "hookboy/boundary"
+  - "source/boundary"

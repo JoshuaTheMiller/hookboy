@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hookboy/hookboy/cli"
-	"github.com/hookboy/hookboy/runner"
+	"github.com/hookboy/source/cli"
+	"github.com/hookboy/source/runner"
 )
 
 const (

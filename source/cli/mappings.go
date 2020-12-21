@@ -3,7 +3,7 @@ package cli
 import (
 	"io"
 
-	"github.com/hookboy/hookboy/runner"
+	"github.com/hookboy/source/runner"
 	"github.com/urfave/cli"
 )
 
