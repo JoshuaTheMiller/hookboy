@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/hookboy/hookboy/cli"
 	"github.com/hookboy/hookboy/runner"
 )
 
@@ -14,7 +15,13 @@ const (
 )
 
 func main() {
-	if err := runner.RunApp(os.Args, os.Stdout); err != nil {
+	var configuration, err = runner.GetDefaultConfiguration()
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+	}
+
+	if err := cli.RunApp(os.Args, os.Stdout, configuration); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(exitFail)
 	}

@@ -12,15 +12,15 @@ func TestGenerateExpectedLineFromFile(t *testing.T) {
 
 	var extraArgNameValue = "extraArgName"
 	var extraArgValueValue = "extraArgValue"
-	var ea = extraArguments{
+	var ea = ExtraArguments{
 		Name:  extraArgNameValue,
 		Value: extraArgValueValue,
 	}
 
 	var pathValue = "somePath"
-	var hookFile = hookFile{
+	var hookFile = HookFile{
 		Path:           pathValue,
-		ExtraArguments: []extraArguments{ea},
+		ExtraArguments: []ExtraArguments{ea},
 	}
 
 	var expectedLine = fmt.Sprintf("exec \"%s\" \"$@\" %s=%s ", pathValue, extraArgNameValue, extraArgValueValue)

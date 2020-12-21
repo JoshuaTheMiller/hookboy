@@ -1,35 +1,19 @@
-package runner
+package cli
 
 import (
 	"io"
 
+	"github.com/hookboy/hookboy/runner"
 	"github.com/urfave/cli"
 )
 
-var recognizedHooks = [...]string{
-	"applypatch-msg",
-	"commit-msg",
-	"fsmonitor-watchman",
-	"post-update",
-	"pre-applypatch",
-	"pre-commit",
-	"pre-merge-commit",
-	"pre-push",
-	"pre-rebase",
-	"pre-receive",
-	"prepare-commit-msg",
-	"update"}
-
-var actualGitHooksDir = ".git/hooks/"
-var grappleCacheDir = ".grapple-cache"
-
 // RunApp starts Hookboy
-func RunApp(args []string, stdout io.Writer) error {
-	var grappleConfiguration, configurationError = getDefaultConfiguration()
+func RunApp(args []string, stdout io.Writer, application runner.HookBoy) error {
+	// var grappleConfiguration, configurationError = getDefaultConfiguration()
 
-	if configurationError != nil {
-		return configurationError
-	}
+	// if configurationError != nil {
+	// 	return configurationError
+	// }
 
 	app := &cli.App{
 		Writer: stdout,
@@ -49,7 +33,7 @@ func RunApp(args []string, stdout io.Writer) error {
 				Name:  "install",
 				Usage: "Configures local Git Hooks to adhere to the '.grapple' configuration file",
 				Action: func(c *cli.Context) error {
-					message, err := grappleConfiguration.Install()
+					message, err := application.Install()
 					stdout.Write([]byte(message))
 					return err
 				},

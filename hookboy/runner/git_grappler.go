@@ -9,11 +9,25 @@ import (
 	"strings"
 )
 
-type grappler interface {
-	Install(string, error)
-}
+var recognizedHooks = [...]string{
+	"applypatch-msg",
+	"commit-msg",
+	"fsmonitor-watchman",
+	"post-update",
+	"pre-applypatch",
+	"pre-commit",
+	"pre-merge-commit",
+	"pre-push",
+	"pre-rebase",
+	"pre-receive",
+	"prepare-commit-msg",
+	"update"}
 
-func (configuration *configuration) Install() (string, error) {
+var actualGitHooksDir = ".git/hooks/"
+var grappleCacheDir = ".grapple-cache"
+
+// Install installs the hooks with the given configuration
+func (configuration *Configuration) Install() (string, error) {
 	var localHooksDir = configuration.LocalHookDir
 
 	files, err := ioutil.ReadDir(localHooksDir)
@@ -48,7 +62,7 @@ func (configuration *configuration) Install() (string, error) {
 		filesToCreate[hook.HookName] = lines
 	}
 
-	if configuration.AutoAddHooks == byFileName {
+	if configuration.AutoAddHooks == ByFileName {
 		for _, f := range files {
 			var potentialHookName = f.Name()
 
@@ -96,7 +110,7 @@ func itemExists(arrayType interface{}, item interface{}) bool {
 	return false
 }
 
-func generateLineFromFile(fileToInclude hookFile) string {
+func generateLineFromFile(fileToInclude HookFile) string {
 	var sb strings.Builder
 
 	sb.WriteString("exec ")

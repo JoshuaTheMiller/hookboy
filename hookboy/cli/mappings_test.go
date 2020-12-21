@@ -1,4 +1,4 @@
-package runner
+package cli
 
 import (
 	"bytes"
@@ -14,10 +14,10 @@ func formatArgsForCli(args ...string) []string {
 }
 
 func TestRunAppSaysHello(t *testing.T) {
-	// var flagToTest = "hello"
+	var testApplication FakeApplication
 	var args = []string{"a", "hello"}
 	var byteBuffer bytes.Buffer
-	var err = RunApp(args, &byteBuffer)
+	var err = RunApp(args, &byteBuffer, &testApplication)
 
 	if err != nil {
 		t.Errorf("Command failed to run: '%s'", err)
@@ -32,19 +32,31 @@ func TestRunAppSaysHello(t *testing.T) {
 }
 
 func TestRunAppInstallsSuccessfully(t *testing.T) {
-	// var flagToTest = "hello"
+	var installMessage = `Hooks installed!`
+
+	var testApplication FakeApplication
+	testApplication.InstallMessage = installMessage
+
 	var args = []string{"a", "install"}
 	var byteBuffer bytes.Buffer
-	var err = RunApp(args, &byteBuffer)
+	var err = RunApp(args, &byteBuffer, &testApplication)
 
 	if err != nil {
 		t.Errorf("Command failed to run: '%s'", err)
 		return
 	}
 
-	var expectedOutput = `Hooks installed!`
+	var expectedOutput = installMessage
 	var actualOutput = byteBuffer.String()
 	if actualOutput != expectedOutput {
 		t.Errorf("Output incorrect! Expected '%s', received '%s'", expectedOutput, actualOutput)
 	}
+}
+
+type FakeApplication struct {
+	InstallMessage string
+}
+
+func (fakeApplication *FakeApplication) Install() (string, error) {
+	return fakeApplication.InstallMessage, nil
 }

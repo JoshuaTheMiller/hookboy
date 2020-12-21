@@ -9,7 +9,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func getConfiguration(pathToConfig string) (*configuration, error) {
+func getConfiguration(pathToConfig string) (*Configuration, error) {
 
 	yamlFile, err := ioutil.ReadFile(pathToConfig)
 	if err != nil {
@@ -22,8 +22,8 @@ func getConfiguration(pathToConfig string) (*configuration, error) {
 	return deserializeConfiguration(yamlFile)
 }
 
-func deserializeConfiguration(rawConfiguration []byte) (*configuration, error) {
-	c := &configuration{}
+func deserializeConfiguration(rawConfiguration []byte) (*Configuration, error) {
+	c := &Configuration{}
 	err := yaml.Unmarshal(rawConfiguration, c)
 	if err != nil {
 		//log.Fatalf("Unmarshal: %v", err)
@@ -34,17 +34,19 @@ func deserializeConfiguration(rawConfiguration []byte) (*configuration, error) {
 	return c.setDefaults(), nil
 }
 
-func getDefaultConfiguration() (*configuration, error) {
+// GetDefaultConfiguration use the config from the
+// '.gitgrapple.yml' file
+func GetDefaultConfiguration() (*Configuration, error) {
 	return getConfiguration(".gitgrapple.yml")
 }
 
-func (c *configuration) setDefaults() *configuration {
+func (c *Configuration) setDefaults() *Configuration {
 	if c.LocalHookDir == "" {
 		c.LocalHookDir = "./hooks"
 	}
 
 	if c.AutoAddHooks == "" {
-		c.AutoAddHooks = byFileName
+		c.AutoAddHooks = ByFileName
 	}
 
 	return c

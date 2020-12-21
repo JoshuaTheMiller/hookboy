@@ -11,13 +11,13 @@ func Sum(x int, y int) int {
 }
 
 func TestSum(t *testing.T) {
-	var configuration, err = getDefaultConfiguration()
+	var configuration, err = GetDefaultConfiguration()
 
 	if err != nil {
 		t.Errorf("Was unable to retrieve default configuration")
 	}
 
-	if configuration.AutoAddHooks != byFileName {
+	if configuration.AutoAddHooks != ByFileName {
 		t.Errorf("Expected AutoAddHooks to be byFileName")
 	}
 
@@ -40,7 +40,7 @@ hooks: []
 func TestAutoAddHooksSetToNoneProperly(t *testing.T) {
 	var configuration, _ = deserializeConfiguration([]byte(testData1))
 
-	if configuration.AutoAddHooks != no {
+	if configuration.AutoAddHooks != No {
 		t.Errorf("Expected AutoAddHooks to be No")
 	}
 
