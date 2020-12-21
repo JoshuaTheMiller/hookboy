@@ -1,6 +1,7 @@
-package main
+package runner
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -18,7 +19,7 @@ func (configuration *configuration) Install() (string, error) {
 	files, err := ioutil.ReadDir(localHooksDir)
 
 	if err != nil {
-		return "", err
+		return "", errors.New("Unable to find localHooksDir")
 	}
 
 	var filesToCreate = make(map[string][]string)

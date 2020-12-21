@@ -1,4 +1,4 @@
-package main
+package runner
 
 import (
 	"fmt"
@@ -11,7 +11,11 @@ func Sum(x int, y int) int {
 }
 
 func TestSum(t *testing.T) {
-	var configuration, _ = getDefaultConfiguration()
+	var configuration, err = getDefaultConfiguration()
+
+	if err != nil {
+		t.Errorf("Was unable to retrieve default configuration")
+	}
 
 	if configuration.AutoAddHooks != byFileName {
 		t.Errorf("Expected AutoAddHooks to be byFileName")

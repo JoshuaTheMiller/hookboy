@@ -1,9 +1,7 @@
-package main
+package runner
 
 import (
-	"fmt"
 	"io"
-	"os"
 
 	"github.com/urfave/cli"
 )
@@ -25,20 +23,8 @@ var recognizedHooks = [...]string{
 var actualGitHooksDir = ".git/hooks/"
 var grappleCacheDir = ".grapple-cache"
 
-const (
-	// exitFail is the exit code if the program
-	// fails.
-	exitFail = 1
-)
-
-func main() {
-	if err := runApp(os.Args, os.Stdout); err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
-		os.Exit(exitFail)
-	}
-}
-
-func runApp(args []string, stdout io.Writer) error {
+// RunApp starts Hookboy
+func RunApp(args []string, stdout io.Writer) error {
 	var grappleConfiguration, configurationError = getDefaultConfiguration()
 
 	if configurationError != nil {

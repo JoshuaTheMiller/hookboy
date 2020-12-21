@@ -6,7 +6,8 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
-func getHomeDir() (string, error) {
+// GetHomeDir as
+func GetHomeDir() (string, error) {
 	dir, err := homedir.Dir()
 
 	if err != nil {
