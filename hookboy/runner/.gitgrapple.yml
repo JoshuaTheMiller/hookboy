@@ -1,0 +1,23 @@
+---
+
+# localHookDir: ./hooks
+# autoAddHooks: ByFileName
+hooks:
+  - hookName: commit-msg
+    # Can be excluded
+    # Multi line or single line support!
+    statement: | 
+      echo This is being included via the config file
+      echo This is another line
+    # Can be excluded
+    files:
+      - path: ./hooks/CommitMustContainValidTags.js
+        extraArguments:
+          - name: FilePath
+            value: ./hooks/CommitMessageTags.json
+      - path: ./hooks/yet-another-commit-msg
+        extraArguments:
+          - name: Name1
+            value: Value1
+          - name: Name2
+            value: Value2  

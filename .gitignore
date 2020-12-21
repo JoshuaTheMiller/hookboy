@@ -2,3 +2,4 @@
 .grapple-cache
 *.out
 .test_*
+coverage.txt

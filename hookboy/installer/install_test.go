@@ -10,7 +10,7 @@ func TestGetHomeDirDoesNotFail(t *testing.T) {
 	// annoying so we're going to test for general success.
 	// Open to suggestions though!
 
-	_, err := getHomeDir()
+	_, err := GetHomeDir()
 
 	if err != nil {
 		t.Errorf("Unable to retrieve HomeDir: %s", err)

@@ -1,4 +1,4 @@
-package main
+package runner
 
 import (
 	"bytes"
@@ -17,7 +17,7 @@ func TestRunAppSaysHello(t *testing.T) {
 	// var flagToTest = "hello"
 	var args = []string{"a", "hello"}
 	var byteBuffer bytes.Buffer
-	var err = runApp(args, &byteBuffer)
+	var err = RunApp(args, &byteBuffer)
 
 	if err != nil {
 		t.Errorf("Command failed to run: '%s'", err)
@@ -35,7 +35,7 @@ func TestRunAppInstallsSuccessfully(t *testing.T) {
 	// var flagToTest = "hello"
 	var args = []string{"a", "install"}
 	var byteBuffer bytes.Buffer
-	var err = runApp(args, &byteBuffer)
+	var err = RunApp(args, &byteBuffer)
 
 	if err != nil {
 		t.Errorf("Command failed to run: '%s'", err)
