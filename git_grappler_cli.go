@@ -49,7 +49,7 @@ func runApp(args []string, stdout io.Writer) error {
 		Writer: stdout,
 		Name:   "Grapple",
 		Usage:  "Git Hooks made easy!",
-		Commands: []*cli.Command{
+		Commands: []cli.Command{
 			{
 				Name:  "hello",
 				Usage: "Says hello!",

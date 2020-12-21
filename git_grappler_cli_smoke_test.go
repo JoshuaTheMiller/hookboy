@@ -9,7 +9,7 @@ import (
 )
 
 var testFolderName = ".test_bin"
-var binaryName = "Grapple"
+var binaryName = "hookboy"
 
 func getOsDependentCommandPath() string {
 	var os = runtime.GOOS
