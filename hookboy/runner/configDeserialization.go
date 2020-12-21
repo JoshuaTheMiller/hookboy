@@ -9,36 +9,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type extraArguments struct {
-	Name  string `yaml:"name"`
-	Value string `yaml:"value"`
-}
-
-type hookFile struct {
-	Path           string           `yaml:"path"`
-	ExtraArguments []extraArguments `yaml:"extraArguments"`
-}
-
-type hooks struct {
-	HookName  string     `yaml:"hookName"`
-	Statement string     `yaml:"statement"`
-	Files     []hookFile `yaml:"files"`
-}
-
-type autoAddHooks string
-
-const (
-	no         autoAddHooks = "No"
-	byFileName autoAddHooks = "ByFileName"
-)
-
-type configuration struct {
-	LocalHookDir string `yaml:"localHookDir"`
-	// AutoAddHooks Defaults to ByFileName
-	AutoAddHooks autoAddHooks `yaml:"autoAddHooks"`
-	Hooks        []hooks      `yaml:"hooks"`
-}
-
 func getConfiguration(pathToConfig string) (*configuration, error) {
 
 	yamlFile, err := ioutil.ReadFile(pathToConfig)
