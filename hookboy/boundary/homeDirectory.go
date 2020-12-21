@@ -1,4 +1,4 @@
-package installer
+package boundary
 
 import (
 	"errors"
@@ -6,7 +6,8 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
-// GetHomeDir as
+// GetHomeDir to retrieve the home directory as configured by the current
+// system
 func GetHomeDir() (string, error) {
 	dir, err := homedir.Dir()
 
