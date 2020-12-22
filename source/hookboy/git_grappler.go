@@ -9,23 +9,6 @@ import (
 	"strings"
 )
 
-var recognizedHooks = [...]string{
-	"applypatch-msg",
-	"commit-msg",
-	"fsmonitor-watchman",
-	"post-update",
-	"pre-applypatch",
-	"pre-commit",
-	"pre-merge-commit",
-	"pre-push",
-	"pre-rebase",
-	"pre-receive",
-	"prepare-commit-msg",
-	"update"}
-
-var actualGitHooksDir = ".git/hooks/"
-var grappleCacheDir = ".grapple-cache"
-
 // Install installs the hooks with the given configuration
 func (configuration *Configuration) Install() (string, error) {
 	var localHooksDir = configuration.LocalHookDir
@@ -91,7 +74,7 @@ func (configuration *Configuration) Install() (string, error) {
 		}
 	}
 
-	return "Hooks installed!", nil
+	return hooksInstalledMessage, nil
 }
 
 func itemExists(arrayType interface{}, item interface{}) bool {

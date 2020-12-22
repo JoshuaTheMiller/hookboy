@@ -23,8 +23,6 @@ func deserializeConfiguration(rawConfiguration []byte) (*Configuration, error) {
 	c := &Configuration{}
 	err := yaml.Unmarshal(rawConfiguration, c)
 	if err != nil {
-		//log.Fatalf("Unmarshal: %v", err)
-
 		return nil, errors.New("failed to parse configuration file")
 	}
 
@@ -34,12 +32,12 @@ func deserializeConfiguration(rawConfiguration []byte) (*Configuration, error) {
 // GetDefaultConfiguration use the config from the
 // '.gitgrapple.yml' file
 func GetDefaultConfiguration() (*Configuration, error) {
-	return getConfiguration(".gitgrapple.yml")
+	return getConfiguration(retrieveConfigPath())
 }
 
 func (c *Configuration) setDefaults() *Configuration {
 	if c.LocalHookDir == "" {
-		c.LocalHookDir = "./hooks"
+		c.LocalHookDir = defaultLocalHooksDir
 	}
 
 	if c.AutoAddHooks == "" {

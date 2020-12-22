@@ -23,7 +23,7 @@ func (b *bob) Construct(configurationPath string) (Application, error) {
 
 	if configPath == "" {
 		// TODO: do some checking for default file/locations
-		configPath = ".gitgrapple.yml"
+		configPath = retrieveConfigPath()
 	}
 
 	return getConfiguration(configPath)
