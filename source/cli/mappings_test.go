@@ -2,38 +2,71 @@ package cli
 
 import (
 	"bytes"
+	"errors"
 	"testing"
+
+	"github.com/hookboy/source/hookboy"
 )
 
 func TestCliIsMappedToApplicationCorrectly(t *testing.T) {
 	var commandMappingsToTest = map[string]commandMapTest{
 		"hello": commandMapTest{
-			ArgsToPass:      []string{"hello"},
-			ExpectedOutput:  "Hello! We hope you are enjoying Grapple!",
-			FakeApplication: FakeApplication{},
+			ArgsToPass:     []string{"hello"},
+			ExpectedOutput: "Hello! We hope you are enjoying Grapple!",
+			Builder: builder{
+				TestApplication: testApplication{},
+			},
 		},
 		"install": commandMapTest{
 			ArgsToPass:     []string{"install"},
 			ExpectedOutput: "Installed!",
-			FakeApplication: FakeApplication{
-				InstallMessage: "Installed!",
+			Builder: builder{
+				TestApplication: testApplication{
+					InstallMessage: "Installed!",
+				},
 			},
+		},
+		"install-installError": commandMapTest{
+			ArgsToPass:     []string{"install"},
+			ExpectedOutput: "Installing failed",
+			Builder: builder{
+				TestApplication: testApplication{
+					Error: errors.New("Installing failed"),
+				},
+			},
+			IsErrorTest: true,
+		},
+		"install-buildError": commandMapTest{
+			ArgsToPass:     []string{"install"},
+			ExpectedOutput: "Building failed",
+			Builder: builder{
+				Error: errors.New("Building failed"),
+			},
+			IsErrorTest: true,
 		},
 	}
 
 	for _, test := range commandMappingsToTest {
-		var testApplication = test.FakeApplication
+		var expectedOutput = test.ExpectedOutput
 		var args = formatArgsForCli(test.ArgsToPass...)
 
 		var byteBuffer bytes.Buffer
-		var err = RunApp(args, &byteBuffer, &testApplication)
+		var err = RunApp(args, &byteBuffer, &test.Builder)
 
-		if err != nil {
-			t.Errorf("Command failed to run: '%s'", err)
-			return
+		var errorExists = err != nil
+
+		if test.IsErrorTest && errorExists {
+			if expectedOutput != err.Error() {
+				t.Errorf("Command did not return expected error: %s", err)
+			}
+			continue
 		}
 
-		var expectedOutput = test.ExpectedOutput
+		if errorExists {
+			t.Errorf("Command failed to run: '%s'", err)
+			continue
+		}
+
 		var actualOutput = byteBuffer.String()
 		if actualOutput != expectedOutput {
 			t.Errorf("Output incorrect! Expected '%s', received '%s'", expectedOutput, actualOutput)
@@ -50,15 +83,34 @@ func formatArgsForCli(args ...string) []string {
 }
 
 type commandMapTest struct {
-	ArgsToPass      []string
-	ExpectedOutput  string
-	FakeApplication FakeApplication
+	ArgsToPass     []string
+	ExpectedOutput string
+	Builder        builder
+	IsErrorTest    bool
 }
 
-type FakeApplication struct {
+type builder struct {
+	TestApplication testApplication
+	Error           error
+}
+
+func (b *builder) Construct(configurationPath string) (hookboy.Application, error) {
+	if b.Error != nil {
+		return nil, b.Error
+	}
+
+	return &b.TestApplication, nil
+}
+
+type testApplication struct {
 	InstallMessage string
+	Error          error
 }
 
-func (fakeApplication *FakeApplication) Install() (string, error) {
-	return fakeApplication.InstallMessage, nil
+func (ta *testApplication) Install() (string, error) {
+	if ta.Error != nil {
+		return "", ta.Error
+	}
+
+	return ta.InstallMessage, nil
 }

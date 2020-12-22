@@ -15,13 +15,9 @@ const (
 )
 
 func main() {
-	var configuration, err = hookboy.GetDefaultConfiguration()
+	builder := hookboy.GetBuilder()
 
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
-	}
-
-	if err := cli.RunApp(os.Args, os.Stdout, configuration); err != nil {
+	if err := cli.RunApp(os.Args, os.Stdout, builder); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(exitFail)
 	}

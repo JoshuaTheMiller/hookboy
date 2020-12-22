@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 
 	"gopkg.in/yaml.v3"
 )
@@ -13,8 +12,6 @@ func getConfiguration(pathToConfig string) (*Configuration, error) {
 
 	yamlFile, err := ioutil.ReadFile(pathToConfig)
 	if err != nil {
-		log.Printf("yamlFile.Get err   #%v ", err)
-
 		var errorString = fmt.Sprintf("cannot read file '%s', please check that it is valid", pathToConfig)
 		return nil, errors.New(errorString)
 	}

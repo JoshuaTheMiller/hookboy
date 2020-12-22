@@ -8,13 +8,7 @@ import (
 )
 
 // RunApp starts Hookboy
-func RunApp(args []string, stdout io.Writer, application hookboy.Application) error {
-	// var grappleConfiguration, configurationError = getDefaultConfiguration()
-
-	// if configurationError != nil {
-	// 	return configurationError
-	// }
-
+func RunApp(args []string, stdout io.Writer, ab hookboy.Builder) error {
 	app := &cli.App{
 		Writer: stdout,
 		Name:   "Grapple",
@@ -33,13 +27,37 @@ func RunApp(args []string, stdout io.Writer, application hookboy.Application) er
 				Name:  "install",
 				Usage: "Configures local Git Hooks to adhere to the '.grapple' configuration file",
 				Action: func(c *cli.Context) error {
-					message, err := application.Install()
+					options := cliOptions{}
+
+					application, err := retrieveApplication(options, ab)
+
+					if err != nil {
+						return err
+					}
+
+					var message, installErr = application.Install()
+
+					if installErr != nil {
+						return installErr
+					}
+
 					stdout.Write([]byte(message))
-					return err
+
+					return nil
 				},
 			},
 		},
 	}
 
 	return app.Run(args)
+}
+
+type cliOptions struct {
+	ConfigPath string
+}
+
+func retrieveApplication(options cliOptions, ab hookboy.Builder) (hookboy.Application, error) {
+	application, err := ab.Construct(options.ConfigPath)
+
+	return application, err
 }
