@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/hookboy/source/cli"
-	"github.com/hookboy/source/runner"
+	"github.com/hookboy/source/hookboy"
 )
 
 const (
@@ -15,7 +15,7 @@ const (
 )
 
 func main() {
-	var configuration, err = runner.GetDefaultConfiguration()
+	var configuration, err = hookboy.GetDefaultConfiguration()
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)

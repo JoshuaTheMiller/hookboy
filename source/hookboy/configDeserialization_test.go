@@ -1,4 +1,4 @@
-package runner
+package hookboy
 
 import (
 	"fmt"

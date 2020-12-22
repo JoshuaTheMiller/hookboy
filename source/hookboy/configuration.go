@@ -1,4 +1,4 @@
-package runner
+package hookboy
 
 // ExtraArguments that may be passed to git hooks at run time
 // These pairs will be hardcoded into the final hooks file present

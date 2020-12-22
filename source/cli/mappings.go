@@ -3,12 +3,12 @@ package cli
 import (
 	"io"
 
-	"github.com/hookboy/source/runner"
+	"github.com/hookboy/source/hookboy"
 	"github.com/urfave/cli"
 )
 
 // RunApp starts Hookboy
-func RunApp(args []string, stdout io.Writer, application runner.HookBoy) error {
+func RunApp(args []string, stdout io.Writer, application hookboy.Application) error {
 	// var grappleConfiguration, configurationError = getDefaultConfiguration()
 
 	// if configurationError != nil {
