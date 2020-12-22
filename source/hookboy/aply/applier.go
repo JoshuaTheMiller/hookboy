@@ -1,4 +1,4 @@
-package hookboy
+package aply
 
 import (
 	"errors"
@@ -7,10 +7,12 @@ import (
 	"os"
 	"reflect"
 	"strings"
+
+	"github.com/hookboy/source/hookboy/conf"
 )
 
 // Install installs the hooks with the given configuration
-func (configuration *Configuration) Install() (string, error) {
+func Install(configuration conf.Configuration) (string, error) {
 	var localHooksDir = configuration.LocalHookDir
 
 	files, err := ioutil.ReadDir(localHooksDir)
@@ -45,11 +47,11 @@ func (configuration *Configuration) Install() (string, error) {
 		filesToCreate[hook.HookName] = lines
 	}
 
-	if configuration.AutoAddHooks == ByFileName {
+	if configuration.AutoAddHooks == conf.ByFileName {
 		for _, f := range files {
 			var potentialHookName = f.Name()
 
-			if itemExists(recognizedHooks, potentialHookName) {
+			if itemExists(conf.RecognizedHooks, potentialHookName) {
 				execLine := "exec \"./localHooksDirToReplace/" + potentialHookName + "\"" + " \"$@\" "
 				execLine = strings.Replace(execLine, "localHooksDirToReplace", localHooksDir, 1)
 
@@ -93,7 +95,7 @@ func itemExists(arrayType interface{}, item interface{}) bool {
 	return false
 }
 
-func generateLineFromFile(fileToInclude HookFile) string {
+func generateLineFromFile(fileToInclude conf.HookFile) string {
 	var sb strings.Builder
 
 	sb.WriteString("exec ")
@@ -107,7 +109,7 @@ func generateLineFromFile(fileToInclude HookFile) string {
 }
 
 func createBashExecFile(fileName string, linesToAdd []string) error {
-	file, err := os.Create(actualGitHooksDir + "/" + fileName)
+	file, err := os.Create(conf.ActualGitHooksDir + "/" + fileName)
 
 	if err != nil {
 		return err
@@ -150,8 +152,8 @@ exit 0`
 }
 
 func generateStatementFile(fileName string, statement string) (string, error) {
-	os.MkdirAll(grappleCacheDir, os.ModePerm)
-	var filePath = grappleCacheDir + "/" + fileName + "-statement"
+	os.MkdirAll(conf.GrappleCacheDir, os.ModePerm)
+	var filePath = conf.GrappleCacheDir + "/" + fileName + "-statement"
 	file, err := os.Create(filePath)
 
 	if err != nil {
@@ -163,3 +165,6 @@ func generateStatementFile(fileName string, statement string) (string, error) {
 
 	return filePath, err2
 }
+
+// HooksInstalledMessage
+var hooksInstalledMessage = "Hooks installed!"

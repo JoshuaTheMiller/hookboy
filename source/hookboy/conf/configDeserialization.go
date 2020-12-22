@@ -1,4 +1,4 @@
-package hookboy
+package conf
 
 import (
 	"errors"
@@ -8,7 +8,9 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func getConfiguration(pathToConfig string) (*Configuration, error) {
+// GetConfiguration retrieves a deserialized configuration object from
+// the given path
+func GetConfiguration(pathToConfig string) (*Configuration, error) {
 
 	yamlFile, err := ioutil.ReadFile(pathToConfig)
 	if err != nil {
@@ -32,12 +34,12 @@ func deserializeConfiguration(rawConfiguration []byte) (*Configuration, error) {
 // GetDefaultConfiguration use the config from the
 // '.gitgrapple.yml' file
 func GetDefaultConfiguration() (*Configuration, error) {
-	return getConfiguration(retrieveConfigPath())
+	return GetConfiguration(RetrieveConfigPath())
 }
 
 func (c *Configuration) setDefaults() *Configuration {
 	if c.LocalHookDir == "" {
-		c.LocalHookDir = defaultLocalHooksDir
+		c.LocalHookDir = DefaultLocalHooksDir
 	}
 
 	if c.AutoAddHooks == "" {

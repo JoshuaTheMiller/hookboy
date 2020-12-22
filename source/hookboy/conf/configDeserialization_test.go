@@ -1,16 +1,11 @@
-package hookboy
+package conf
 
 import (
 	"fmt"
 	"testing"
 )
 
-// Sum sums two numbers
-func Sum(x int, y int) int {
-	return x + y
-}
-
-func TestSum(t *testing.T) {
+func TestDeserializationOfDefaultFile(t *testing.T) {
 	var configuration, err = GetDefaultConfiguration()
 
 	if err != nil {
@@ -68,7 +63,7 @@ func TestInvalidConfigDataTreatedAsError(t *testing.T) {
 
 func TestInvalidConfigFileTreatedAsError(t *testing.T) {
 	var fakeFileName = "somefilethatisnotreal"
-	var _, fileReadError = getConfiguration(fakeFileName)
+	var _, fileReadError = GetConfiguration(fakeFileName)
 
 	var expectedErrorMessage = fmt.Sprintf("cannot read file '%s', please check that it is valid", fakeFileName)
 	var actualErrorMessage = fileReadError.Error()

@@ -1,5 +1,10 @@
 package hookboy
 
+import (
+	"github.com/hookboy/source/hookboy/aply"
+	"github.com/hookboy/source/hookboy/conf"
+)
+
 // Application defines the methods available for running the HookBoy
 // tool. Typically returned by Builder
 type Application interface {
@@ -13,6 +18,14 @@ type Builder interface {
 	Construct(configurationPath string) (Application, error)
 }
 
+type hookboyTheAppliction struct {
+	Configuration conf.Configuration
+}
+
+func (hb *hookboyTheAppliction) Install() (string, error) {
+	return aply.Install(hb.Configuration)
+}
+
 type bob struct {
 	// To be used and set in the future for prioritizing package.json checks
 	IsNode bool
@@ -23,10 +36,18 @@ func (b *bob) Construct(configurationPath string) (Application, error) {
 
 	if configPath == "" {
 		// TODO: do some checking for default file/locations
-		configPath = retrieveConfigPath()
+		configPath = conf.RetrieveConfigPath()
 	}
 
-	return getConfiguration(configPath)
+	var configuration, err = conf.GetConfiguration(configPath)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &hookboyTheAppliction{
+		Configuration: *configuration,
+	}, nil
 }
 
 // GetBuilder retrieves the Builder to be used during construction
