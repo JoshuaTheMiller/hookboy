@@ -1,6 +1,8 @@
 package hookboy
 
 import (
+	"fmt"
+
 	"github.com/hookboy/source/hookboy/aply"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/conf/source"
@@ -35,7 +37,8 @@ func (hb *hookboyTheAppliction) CurrentConfiguration() (conf.Configuration, erro
 
 func (hb *hookboyTheAppliction) ConfigurationLocation() (string, error) {
 	var source, err = source.LocateCurrentConfigurationSource()
-	return source.Path, err
+	var message = fmt.Sprintf("| Configuration Source\n|--> Source: %s\n|--> Description: %s", source.Path, source.Description)
+	return message, err
 }
 
 type bob struct {
