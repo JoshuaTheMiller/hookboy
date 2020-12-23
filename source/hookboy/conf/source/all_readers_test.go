@@ -1,10 +1,14 @@
 package source
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/hookboy/source/hookboy/conf/deserialization"
+)
 
 var packageJSONContents = `{
 	"hookboy":{
-		"localHookDir":".someRandomHooksDirForTestingPackageJSON"
+		"localHookDir":"./someRandomHooksDirForTestingPackageJSON"
 	}
 }`
 var packageJSONOption = fileSystemObjectOptions{
@@ -36,16 +40,17 @@ type sourceTestOptions struct {
 var testsToRun = map[string]sourceTestOptions{
 	"source_package_json": sourceTestOptions{
 		FileContents:              packageJSONContents,
-		ConfigValueToCheckFor:     ".someRandomHooksDirForTestingPackageJSON",
+		ConfigValueToCheckFor:     "./someRandomHooksDirForTestingPackageJSON",
 		FileSystemCreationOptions: []fileSystemObjectOptions{packageJSONOption},
 		ReaderToTest:              packageJSONFileReader{},
 	},
 	"source_local_file": sourceTestOptions{
 		FileContents:              yamlContents,
-		ConfigValueToCheckFor:     ".someRandomHooksDirForTestingYAML",
+		ConfigValueToCheckFor:     "./someRandomHooksDirForTestingYAML",
 		FileSystemCreationOptions: []fileSystemObjectOptions{packageYamlOption},
 		ReaderToTest: localFileReader{
-			Path: packageYamlOption.Name,
+			Path:         packageYamlOption.Name,
+			Deserializer: deserialization.YamlDeserializer{},
 		},
 	},
 	"source_local_folder": sourceTestOptions{

@@ -1,6 +1,9 @@
 package source
 
-import "github.com/hookboy/source/hookboy/conf"
+import (
+	"github.com/hookboy/source/hookboy/conf"
+	"github.com/hookboy/source/hookboy/conf/deserialization"
+)
 
 var configurationReaders = []configurationReader{
 	packageJSONFileReader{
@@ -11,12 +14,14 @@ var configurationReaders = []configurationReader{
 		Desc: "Hookboy will look first look for raw hooks in a .hookboy folder, then will look for configuration in a yaml file named .hookboy",
 	},
 	localFileReader{
-		Path: ".hookboy",
-		Desc: "Hookboy will look first look for raw hooks in a .hookboy folder, then will look for configuration in a yaml file named .hookboy",
+		Path:         ".hookboy",
+		Desc:         "Hookboy will look first look for raw hooks in a .hookboy folder, then will look for configuration in a yaml file named .hookboy",
+		Deserializer: deserialization.YamlDeserializer{},
 	},
 	localFileReader{
-		Path: ".hookboy.yml",
-		Desc: "Hookboy will look for configuration in a yaml file named .hookboy",
+		Path:         ".hookboy.yml",
+		Desc:         "Hookboy will look for configuration in a yaml file named .hookboy",
+		Deserializer: deserialization.YamlDeserializer{},
 	},
 }
 

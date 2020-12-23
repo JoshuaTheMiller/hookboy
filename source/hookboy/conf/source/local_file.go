@@ -6,8 +6,9 @@ import (
 )
 
 type localFileReader struct {
-	Path string
-	Desc string
+	Path         string
+	Desc         string
+	Deserializer deserialization.Deserializer
 }
 
 func (l localFileReader) CanRead() bool {
@@ -27,7 +28,7 @@ func (l localFileReader) Read() (conf.Configuration, error) {
 		return conf.Configuration{}, err
 	}
 
-	var des = deserialization.YamlDeserializer{}
+	var des = l.Deserializer
 
 	configuration, err := des.Deserialize(rawFile)
 

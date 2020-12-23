@@ -47,8 +47,45 @@ func (l packageJSONFileReader) CanRead() bool {
 }
 
 func (l packageJSONFileReader) Read() (conf.Configuration, error) {
-	var config conf.Configuration
-	return config, NoConfigurationSourceFoundError
+
+	var packageJSONPath = packageJSONName
+
+	result := checkForFileSystemObject(packageJSONPath)
+
+	if result == doesNotExist || result == folder {
+		return conf.Configuration{}, ConfigurationSourceError{
+			Description: "Error reading package.json",
+		}
+	}
+
+	data, err := ioutil.ReadFile(packageJSONPath)
+	if err != nil {
+		return conf.Configuration{}, ConfigurationSourceError{
+			Description: "Error reading package.json",
+		}
+	}
+
+	type packageJSON struct {
+		Hookboy *conf.Configuration `json:"hookboy"`
+	}
+
+	var obj packageJSON
+
+	err = json.Unmarshal(data, &obj)
+
+	if err != nil {
+		return conf.Configuration{}, ConfigurationSourceError{
+			Description: "Error reading package.json",
+		}
+	}
+
+	if obj.Hookboy != nil {
+		return *obj.Hookboy, nil
+	}
+
+	return conf.Configuration{}, ConfigurationSourceError{
+		Description: "Error reading package.json",
+	}
 }
 
 func (l packageJSONFileReader) Description() string {
