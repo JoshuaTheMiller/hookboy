@@ -55,7 +55,7 @@ var testsToRun = map[string]sourceTestOptions{
 	},
 	"source_local_folder": sourceTestOptions{
 		FileContents:              "",
-		ConfigValueToCheckFor:     "",
+		ConfigValueToCheckFor:     folderOptions.Name,
 		FileSystemCreationOptions: []fileSystemObjectOptions{folderOptions},
 		ReaderToTest: localFolderReader{
 			Path: folderOptions.Name,

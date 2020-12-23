@@ -1,6 +1,8 @@
 package source
 
-import "github.com/hookboy/source/hookboy/conf"
+import (
+	"github.com/hookboy/source/hookboy/conf"
+)
 
 type localFolderReader struct {
 	Path string
@@ -18,8 +20,11 @@ func (l localFolderReader) CanRead() bool {
 }
 
 func (l localFolderReader) Read() (conf.Configuration, error) {
-	var config conf.Configuration
-	return config, NoConfigurationSourceFoundError
+	var configurationToReturn conf.Configuration
+	configurationToReturn.AutoAddHooks = conf.ByFileName
+	configurationToReturn.LocalHookDir = l.Path
+
+	return configurationToReturn, nil
 }
 
 func (l localFolderReader) Description() string {
