@@ -11,6 +11,8 @@ import (
 type Application interface {
 	// Rename to Wrangle and Wrangler
 	Install() (string, error)
+	CurrentConfiguration() (conf.Configuration, error)
+	ConfigurationLocation() (string, error)
 }
 
 // Builder implementations construct services that adhere to the Application
@@ -25,6 +27,15 @@ type hookboyTheAppliction struct {
 
 func (hb *hookboyTheAppliction) Install() (string, error) {
 	return aply.Install(hb.Configuration)
+}
+
+func (hb *hookboyTheAppliction) CurrentConfiguration() (conf.Configuration, error) {
+	return hb.Configuration, nil
+}
+
+func (hb *hookboyTheAppliction) ConfigurationLocation() (string, error) {
+	var source, err = source.LocateCurrentConfigurationSource()
+	return source.Path, err
 }
 
 type bob struct {
