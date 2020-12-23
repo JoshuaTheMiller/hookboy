@@ -1,7 +1,6 @@
 package aply
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -13,14 +12,6 @@ import (
 
 // Install installs the hooks with the given configuration
 func Install(configuration conf.Configuration) (string, error) {
-	var localHooksDir = configuration.LocalHookDir
-
-	files, err := ioutil.ReadDir(localHooksDir)
-
-	if err != nil {
-		return "", errors.New("Unable to find localHooksDir")
-	}
-
 	var filesToCreate = make(map[string][]string)
 
 	for _, hook := range configuration.Hooks {
@@ -48,24 +39,7 @@ func Install(configuration conf.Configuration) (string, error) {
 	}
 
 	if configuration.AutoAddHooks == conf.ByFileName {
-		for _, f := range files {
-			var potentialHookName = f.Name()
-
-			if itemExists(conf.RecognizedHooks, potentialHookName) {
-				execLine := "exec \"./localHooksDirToReplace/" + potentialHookName + "\"" + " \"$@\" "
-				execLine = strings.Replace(execLine, "localHooksDirToReplace", localHooksDir, 1)
-
-				currentLines, exists := filesToCreate[potentialHookName]
-
-				if exists {
-					currentLines = append(currentLines, execLine)
-					filesToCreate[potentialHookName] = currentLines
-				} else {
-					var execLineAsArray = []string{execLine}
-					filesToCreate[potentialHookName] = execLineAsArray
-				}
-			}
-		}
+		filesToCreate = addHooksByFileName(configuration.LocalHookDir, filesToCreate)
 	}
 
 	for fileName, linesForFile := range filesToCreate {
@@ -77,6 +51,35 @@ func Install(configuration conf.Configuration) (string, error) {
 	}
 
 	return hooksInstalledMessage, nil
+}
+
+func addHooksByFileName(localHooksDir string, filesToCreate map[string][]string) map[string][]string {
+	files, err := ioutil.ReadDir(localHooksDir)
+
+	if err != nil {
+		return filesToCreate
+	}
+
+	for _, f := range files {
+		var potentialHookName = f.Name()
+
+		if itemExists(conf.RecognizedHooks, potentialHookName) {
+			execLine := "exec \"./localHooksDirToReplace/" + potentialHookName + "\"" + " \"$@\" "
+			execLine = strings.Replace(execLine, "localHooksDirToReplace", localHooksDir, 1)
+
+			currentLines, exists := filesToCreate[potentialHookName]
+
+			if exists {
+				currentLines = append(currentLines, execLine)
+				filesToCreate[potentialHookName] = currentLines
+			} else {
+				var execLineAsArray = []string{execLine}
+				filesToCreate[potentialHookName] = execLineAsArray
+			}
+		}
+	}
+
+	return filesToCreate
 }
 
 func itemExists(arrayType interface{}, item interface{}) bool {

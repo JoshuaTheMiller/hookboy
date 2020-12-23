@@ -122,7 +122,7 @@ func TestThatHookStatementsGetInstalledProperly(t *testing.T) {
 		AutoAddHooks: conf.No,
 		Hooks: []conf.Hooks{
 			conf.Hooks{
-				HookName:  "theActualHookName",
+				HookName:  hookName,
 				Statement: "echo This file was placed as a test!",
 			},
 		},
@@ -178,7 +178,7 @@ func TestThatLocalHooksGetInstalledProperly(t *testing.T) {
 
 	// other tests test for configuration
 	var configuration = conf.Configuration{
-		LocalHookDir: "theActualLocalHookDir",
+		LocalHookDir: localHookDir,
 		AutoAddHooks: conf.ByFileName,
 	}
 
