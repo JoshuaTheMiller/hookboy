@@ -3,6 +3,7 @@ package cli
 import (
 	"io"
 
+	"github.com/hookboy/source/boundary"
 	"github.com/hookboy/source/hookboy"
 	"github.com/urfave/cli/v2"
 )
@@ -68,7 +69,7 @@ func RunApp(args []string, stdout io.Writer, ab hookboy.Builder) error {
 								return err
 							}
 
-							niceJSON, err := serializeToNiceJSON(configuration)
+							niceJSON, err := boundary.SerializeToNiceJSON(configuration)
 
 							if err != nil {
 								return err
