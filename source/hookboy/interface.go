@@ -25,6 +25,7 @@ type Builder interface {
 
 type hookboyTheAppliction struct {
 	Configuration conf.Configuration
+	CE            source.ConfigurationExposer
 }
 
 func (hb *hookboyTheAppliction) Install() (string, error) {
@@ -36,7 +37,7 @@ func (hb *hookboyTheAppliction) CurrentConfiguration() (conf.Configuration, erro
 }
 
 func (hb *hookboyTheAppliction) ConfigurationLocation() (string, error) {
-	var source, err = source.LocateCurrentConfigurationSource()
+	var source, err = hb.CE.LocateCurrentConfigurationSource()
 	var message = fmt.Sprintf("| Configuration Source\n|--> Source: %s\n|--> Description: %s", source.Path, source.Description)
 	return message, err
 }
@@ -45,7 +46,7 @@ type bob struct {
 }
 
 func (b *bob) Construct() (Application, error) {
-	configuration, err := source.RetrieveCurrentConfiguration()
+	configuration, err := source.GetConfigurationExposer().RetrieveCurrentConfiguration()
 
 	if err != nil {
 		return nil, err

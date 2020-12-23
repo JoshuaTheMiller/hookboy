@@ -1,7 +1,6 @@
 package source
 
 import (
-	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/conf/deserialization"
 )
 
@@ -23,11 +22,4 @@ var configurationReaders = []configurationReader{
 		Desc:         "Hookboy will look for configuration in a yaml file named .hookboy",
 		Deserializer: deserialization.YamlDeserializer{},
 	},
-}
-
-type configurationReader interface {
-	CanRead() bool
-	Read() (conf.Configuration, error)
-	Description() string
-	Location() string
 }
