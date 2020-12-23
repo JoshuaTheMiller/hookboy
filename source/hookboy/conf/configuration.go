@@ -43,3 +43,16 @@ type Configuration struct {
 	AutoAddHooks AutoAddHooks `yaml:"autoAddHooks"`
 	Hooks        []Hooks      `yaml:"hooks"`
 }
+
+// SetDefaults sets appropriate defaults
+func (c *Configuration) SetDefaults() *Configuration {
+	if c.LocalHookDir == "" {
+		c.LocalHookDir = DefaultLocalHooksDir
+	}
+
+	if c.AutoAddHooks == "" {
+		c.AutoAddHooks = ByFileName
+	}
+
+	return c
+}

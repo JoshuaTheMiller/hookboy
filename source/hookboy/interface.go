@@ -3,6 +3,7 @@ package hookboy
 import (
 	"github.com/hookboy/source/hookboy/aply"
 	"github.com/hookboy/source/hookboy/conf"
+	"github.com/hookboy/source/hookboy/conf/deserialization"
 )
 
 // Application defines the methods available for running the HookBoy
@@ -39,7 +40,7 @@ func (b *bob) Construct(configurationPath string) (Application, error) {
 		configPath = conf.RetrieveConfigPath()
 	}
 
-	var configuration, err = conf.GetConfiguration(configPath)
+	var configuration, err = deserialization.GetConfiguration(configPath)
 
 	if err != nil {
 		return nil, err

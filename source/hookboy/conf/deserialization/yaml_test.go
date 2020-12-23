@@ -1,8 +1,10 @@
-package conf
+package deserialization
 
 import (
 	"fmt"
 	"testing"
+
+	"github.com/hookboy/source/hookboy/conf"
 )
 
 func TestDeserializationOfDefaultFile(t *testing.T) {
@@ -12,7 +14,7 @@ func TestDeserializationOfDefaultFile(t *testing.T) {
 		t.Errorf("Was unable to retrieve default configuration")
 	}
 
-	if configuration.AutoAddHooks != ByFileName {
+	if configuration.AutoAddHooks != conf.ByFileName {
 		t.Errorf("Expected AutoAddHooks to be byFileName")
 	}
 
@@ -35,7 +37,7 @@ hooks: []
 func TestAutoAddHooksSetToNoneProperly(t *testing.T) {
 	var configuration, _ = deserializeConfiguration([]byte(testData1))
 
-	if configuration.AutoAddHooks != No {
+	if configuration.AutoAddHooks != conf.No {
 		t.Errorf("Expected AutoAddHooks to be No")
 	}
 
