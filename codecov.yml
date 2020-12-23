@@ -4,9 +4,13 @@ codecov:
 comment: false
 
 coverage:
-  precision: 2
-  round: down
-  range: "60...100"
+  status:
+    project:
+      default:
+        target: 60%
+    patch:
+      default:
+        target: 40%
 
 parsers:
   gcov:
