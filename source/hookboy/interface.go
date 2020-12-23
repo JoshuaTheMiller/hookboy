@@ -54,6 +54,7 @@ func (b *bob) Construct() (Application, error) {
 
 	return &hookboyTheAppliction{
 		Configuration: configuration,
+		CE:            source.GetConfigurationExposer(),
 	}, nil
 }
 

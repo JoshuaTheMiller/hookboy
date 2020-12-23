@@ -63,3 +63,23 @@ func TestCliSaysHello(t *testing.T) {
 		t.Errorf("Output incorrect! Expected '%s', received '%s'", expectedOutput, actualOutput)
 	}
 }
+
+var configSourceResult = `| Configuration Source
+|--> Source: .hookboy.yml
+|--> Description: Hookboy will look for configuration in a yaml file named .hookboy`
+
+func TestHookboyConfigSourceFunctions(t *testing.T) {
+	var flagToTest = []string{"config", "source"}
+	var output, err = exec.Command(getOsDependentCommandPath(), flagToTest...).Output()
+
+	if err != nil {
+		t.Errorf("Command failed to run: '%s'", err)
+		return
+	}
+
+	var expectedOutput = configSourceResult
+	var actualOutput = string(output)
+	if actualOutput != expectedOutput {
+		t.Errorf("Output incorrect! Expected\n'%s'\nreceived\n'%s'", expectedOutput, actualOutput)
+	}
+}
