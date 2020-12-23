@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/hookboy/source/hookboy"
+	"github.com/hookboy/source/hookboy/conf"
 )
 
 func TestCliIsMappedToApplicationCorrectly(t *testing.T) {
@@ -41,6 +42,16 @@ func TestCliIsMappedToApplicationCorrectly(t *testing.T) {
 			ExpectedOutput: "Building failed",
 			Builder: builder{
 				Error: errors.New("Building failed"),
+			},
+			IsErrorTest: true,
+		},
+		"config-source": commandMapTest{
+			ArgsToPass:     []string{"config", "source"},
+			ExpectedOutput: "SomeSourceLocation",
+			Builder: builder{
+				TestApplication: testApplication{
+					ConfigLocation: "SomeSourceLocation",
+				},
 			},
 			IsErrorTest: true,
 		},
@@ -94,7 +105,7 @@ type builder struct {
 	Error           error
 }
 
-func (b *builder) Construct(configurationPath string) (hookboy.Application, error) {
+func (b *builder) Construct() (hookboy.Application, error) {
 	if b.Error != nil {
 		return nil, b.Error
 	}
@@ -105,6 +116,8 @@ func (b *builder) Construct(configurationPath string) (hookboy.Application, erro
 type testApplication struct {
 	InstallMessage string
 	Error          error
+	ConfigLocation string
+	Config         conf.Configuration
 }
 
 func (ta *testApplication) Install() (string, error) {
@@ -113,4 +126,12 @@ func (ta *testApplication) Install() (string, error) {
 	}
 
 	return ta.InstallMessage, nil
+}
+
+func (ta *testApplication) CurrentConfiguration() (conf.Configuration, error) {
+	return ta.Config, ta.Error
+}
+
+func (ta *testApplication) ConfigurationLocation() (string, error) {
+	return ta.ConfigLocation, ta.Error
 }

@@ -1,4 +1,4 @@
-package hookboy
+package aply
 
 import (
 	"fmt"
@@ -6,21 +6,23 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/hookboy/source/hookboy/conf"
 )
 
 func TestGenerateExpectedLineFromFile(t *testing.T) {
 
 	var extraArgNameValue = "extraArgName"
 	var extraArgValueValue = "extraArgValue"
-	var ea = ExtraArguments{
+	var ea = conf.ExtraArguments{
 		Name:  extraArgNameValue,
 		Value: extraArgValueValue,
 	}
 
 	var pathValue = "somePath"
-	var hookFile = HookFile{
+	var hookFile = conf.HookFile{
 		Path:           pathValue,
-		ExtraArguments: []ExtraArguments{ea},
+		ExtraArguments: []conf.ExtraArguments{ea},
 	}
 
 	var expectedLine = fmt.Sprintf("exec \"%s\" \"$@\" %s=%s ", pathValue, extraArgNameValue, extraArgValueValue)
@@ -112,27 +114,21 @@ func TestItemExists(t *testing.T) {
 	}
 }
 
-var hookConfigurationFileForStatementInstall = `
-autoAddHooks: No
-hooks:
-  - hookName: theActualHookName        
-    statement: echo This file was placed as a test!
-    files: [] 
-`
-
 func TestThatHookStatementsGetInstalledProperly(t *testing.T) {
 	var hookName = "post-update"
-	var modifiedConfig = strings.Replace(hookConfigurationFileForStatementInstall, "theActualHookName", hookName, 1)
 
 	// other tests test for configuration
-	var configuration, configError = deserializeConfiguration([]byte(modifiedConfig))
-
-	if configError != nil {
-		t.Errorf("Test config is garbage: '%s'", configError)
-		return
+	var configuration = conf.Configuration{
+		AutoAddHooks: conf.No,
+		Hooks: []conf.Hooks{
+			conf.Hooks{
+				HookName:  hookName,
+				Statement: "echo This file was placed as a test!",
+			},
+		},
 	}
 
-	configuration.Install()
+	Install(configuration)
 
 	var filePath = fmt.Sprintf(".git/hooks/%s", hookName)
 	var contentBytes, error = ioutil.ReadFile(filePath)
@@ -165,19 +161,12 @@ exit 0`
 	}
 }
 
-var hookConfigurationFileForLocalHookInstall = `
-localHookDir: theActualLocalHookDir
-autoAddHooks: ByFileName
-hooks: []
-`
-
 func TestThatLocalHooksGetInstalledProperly(t *testing.T) {
 	var hookName = "post-update"
 	var localHookDir = "hooksForTesting"
-	var modifiedConfig = strings.Replace(hookConfigurationFileForLocalHookInstall, "theActualLocalHookDir", localHookDir, 1)
 
 	var fileContent = "echo Hello from testing!"
-	os.Mkdir(localHookDir, 0755)
+	os.Mkdir(localHookDir, 0777)
 	var fileName = fmt.Sprintf("%s/%s", localHookDir, hookName)
 	var mode = int(0777)
 	var fileWriteError = ioutil.WriteFile(fileName, []byte(fileContent), os.FileMode(mode))
@@ -188,14 +177,12 @@ func TestThatLocalHooksGetInstalledProperly(t *testing.T) {
 	}
 
 	// other tests test for configuration
-	var configuration, configError = deserializeConfiguration([]byte(modifiedConfig))
-
-	if configError != nil {
-		t.Errorf("Test config is garbage: '%s'", configError)
-		return
+	var configuration = conf.Configuration{
+		LocalHookDir: localHookDir,
+		AutoAddHooks: conf.ByFileName,
 	}
 
-	configuration.Install()
+	Install(configuration)
 
 	var filePath = fmt.Sprintf(".git/hooks/%s", hookName)
 	var contentBytes, error = ioutil.ReadFile(filePath)

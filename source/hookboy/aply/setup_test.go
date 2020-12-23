@@ -1,4 +1,4 @@
-package hookboy
+package aply
 
 import (
 	"os"
@@ -17,6 +17,7 @@ func setup() {
 func tearDown() {
 	os.RemoveAll(".git")
 	os.RemoveAll("hooks")
+	os.RemoveAll(".grapple-cache")
 }
 
 func TestMain(m *testing.M) {

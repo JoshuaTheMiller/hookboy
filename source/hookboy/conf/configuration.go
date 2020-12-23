@@ -1,4 +1,4 @@
-package hookboy
+package conf
 
 // ExtraArguments that may be passed to git hooks at run time
 // These pairs will be hardcoded into the final hooks file present
@@ -42,4 +42,17 @@ type Configuration struct {
 	// AutoAddHooks Defaults to ByFileName
 	AutoAddHooks AutoAddHooks `yaml:"autoAddHooks"`
 	Hooks        []Hooks      `yaml:"hooks"`
+}
+
+// SetDefaults sets appropriate defaults
+func (c *Configuration) SetDefaults() *Configuration {
+	if c.LocalHookDir == "" {
+		c.LocalHookDir = DefaultLocalHooksDir
+	}
+
+	if c.AutoAddHooks == "" {
+		c.AutoAddHooks = ByFileName
+	}
+
+	return c
 }

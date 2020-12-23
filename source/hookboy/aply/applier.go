@@ -1,24 +1,17 @@
-package hookboy
+package aply
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"reflect"
 	"strings"
+
+	"github.com/hookboy/source/hookboy/conf"
 )
 
 // Install installs the hooks with the given configuration
-func (configuration *Configuration) Install() (string, error) {
-	var localHooksDir = configuration.LocalHookDir
-
-	files, err := ioutil.ReadDir(localHooksDir)
-
-	if err != nil {
-		return "", errors.New("Unable to find localHooksDir")
-	}
-
+func Install(configuration conf.Configuration) (string, error) {
 	var filesToCreate = make(map[string][]string)
 
 	for _, hook := range configuration.Hooks {
@@ -45,25 +38,8 @@ func (configuration *Configuration) Install() (string, error) {
 		filesToCreate[hook.HookName] = lines
 	}
 
-	if configuration.AutoAddHooks == ByFileName {
-		for _, f := range files {
-			var potentialHookName = f.Name()
-
-			if itemExists(recognizedHooks, potentialHookName) {
-				execLine := "exec \"./localHooksDirToReplace/" + potentialHookName + "\"" + " \"$@\" "
-				execLine = strings.Replace(execLine, "localHooksDirToReplace", localHooksDir, 1)
-
-				currentLines, exists := filesToCreate[potentialHookName]
-
-				if exists {
-					currentLines = append(currentLines, execLine)
-					filesToCreate[potentialHookName] = currentLines
-				} else {
-					var execLineAsArray = []string{execLine}
-					filesToCreate[potentialHookName] = execLineAsArray
-				}
-			}
-		}
+	if configuration.AutoAddHooks == conf.ByFileName {
+		filesToCreate = addHooksByFileName(configuration.LocalHookDir, filesToCreate)
 	}
 
 	for fileName, linesForFile := range filesToCreate {
@@ -75,6 +51,35 @@ func (configuration *Configuration) Install() (string, error) {
 	}
 
 	return hooksInstalledMessage, nil
+}
+
+func addHooksByFileName(localHooksDir string, filesToCreate map[string][]string) map[string][]string {
+	files, err := ioutil.ReadDir(localHooksDir)
+
+	if err != nil {
+		return filesToCreate
+	}
+
+	for _, f := range files {
+		var potentialHookName = f.Name()
+
+		if itemExists(conf.RecognizedHooks, potentialHookName) {
+			execLine := "exec \"./localHooksDirToReplace/" + potentialHookName + "\"" + " \"$@\" "
+			execLine = strings.Replace(execLine, "localHooksDirToReplace", localHooksDir, 1)
+
+			currentLines, exists := filesToCreate[potentialHookName]
+
+			if exists {
+				currentLines = append(currentLines, execLine)
+				filesToCreate[potentialHookName] = currentLines
+			} else {
+				var execLineAsArray = []string{execLine}
+				filesToCreate[potentialHookName] = execLineAsArray
+			}
+		}
+	}
+
+	return filesToCreate
 }
 
 func itemExists(arrayType interface{}, item interface{}) bool {
@@ -93,7 +98,7 @@ func itemExists(arrayType interface{}, item interface{}) bool {
 	return false
 }
 
-func generateLineFromFile(fileToInclude HookFile) string {
+func generateLineFromFile(fileToInclude conf.HookFile) string {
 	var sb strings.Builder
 
 	sb.WriteString("exec ")
@@ -107,7 +112,7 @@ func generateLineFromFile(fileToInclude HookFile) string {
 }
 
 func createBashExecFile(fileName string, linesToAdd []string) error {
-	file, err := os.Create(actualGitHooksDir + "/" + fileName)
+	file, err := os.Create(conf.ActualGitHooksDir + "/" + fileName)
 
 	if err != nil {
 		return err
@@ -150,8 +155,8 @@ exit 0`
 }
 
 func generateStatementFile(fileName string, statement string) (string, error) {
-	os.MkdirAll(grappleCacheDir, os.ModePerm)
-	var filePath = grappleCacheDir + "/" + fileName + "-statement"
+	os.MkdirAll(conf.GrappleCacheDir, os.ModePerm)
+	var filePath = conf.GrappleCacheDir + "/" + fileName + "-statement"
 	file, err := os.Create(filePath)
 
 	if err != nil {
@@ -163,3 +168,6 @@ func generateStatementFile(fileName string, statement string) (string, error) {
 
 	return filePath, err2
 }
+
+// HooksInstalledMessage
+var hooksInstalledMessage = "Hooks installed!"
