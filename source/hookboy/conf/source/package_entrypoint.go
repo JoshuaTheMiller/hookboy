@@ -11,9 +11,7 @@ type CurrentConfigurationSource struct {
 // LocateCurrentConfigurationSource can be used to help determine where current configuration is
 // coming from.
 func LocateCurrentConfigurationSource() (CurrentConfigurationSource, error) {
-	for _, source := range configurationSources {
-		var reader = source.Reader
-
+	for _, reader := range configurationReaders {
 		var sourceExists = reader.CanRead()
 
 		if sourceExists {
@@ -31,9 +29,7 @@ func LocateCurrentConfigurationSource() (CurrentConfigurationSource, error) {
 // error if no source of Configuration can be found or if there are issues with consuming
 // the configuration.
 func RetrieveCurrentConfiguration() (conf.Configuration, error) {
-	for _, source := range configurationSources {
-		var reader = source.Reader
-
+	for _, reader := range configurationReaders {
 		var sourceExists = reader.CanRead()
 
 		if sourceExists {
