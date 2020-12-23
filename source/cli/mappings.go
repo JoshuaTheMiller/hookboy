@@ -53,11 +53,10 @@ func RunApp(args []string, stdout io.Writer, ab hookboy.Builder) error {
 }
 
 type cliOptions struct {
-	ConfigPath string
 }
 
 func retrieveApplication(options cliOptions, ab hookboy.Builder) (hookboy.Application, error) {
-	application, err := ab.Construct(options.ConfigPath)
+	application, err := ab.Construct()
 
 	return application, err
 }

@@ -3,7 +3,7 @@ package hookboy
 import (
 	"github.com/hookboy/source/hookboy/aply"
 	"github.com/hookboy/source/hookboy/conf"
-	"github.com/hookboy/source/hookboy/conf/deserialization"
+	"github.com/hookboy/source/hookboy/conf/source"
 )
 
 // Application defines the methods available for running the HookBoy
@@ -16,7 +16,7 @@ type Application interface {
 // Builder implementations construct services that adhere to the Application
 // interface
 type Builder interface {
-	Construct(configurationPath string) (Application, error)
+	Construct() (Application, error)
 }
 
 type hookboyTheAppliction struct {
@@ -28,26 +28,17 @@ func (hb *hookboyTheAppliction) Install() (string, error) {
 }
 
 type bob struct {
-	// To be used and set in the future for prioritizing package.json checks
-	IsNode bool
 }
 
-func (b *bob) Construct(configurationPath string) (Application, error) {
-	configPath := configurationPath
-
-	if configPath == "" {
-		// TODO: do some checking for default file/locations
-		configPath = conf.RetrieveConfigPath()
-	}
-
-	var configuration, err = deserialization.GetConfiguration(configPath)
+func (b *bob) Construct() (Application, error) {
+	configuration, err := source.RetrieveCurrentConfiguration()
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &hookboyTheAppliction{
-		Configuration: *configuration,
+		Configuration: configuration,
 	}, nil
 }
 

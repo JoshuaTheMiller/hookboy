@@ -1,6 +1,9 @@
 package source
 
-import "github.com/hookboy/source/hookboy/conf"
+import (
+	"github.com/hookboy/source/hookboy/conf"
+	"github.com/hookboy/source/hookboy/conf/deserialization"
+)
 
 type localFileReader struct {
 	Path string
@@ -18,8 +21,21 @@ func (l localFileReader) CanRead() bool {
 }
 
 func (l localFileReader) Read() (conf.Configuration, error) {
-	var config conf.Configuration
-	return config, NoConfigurationSourceFoundError
+	rawFile, err := readFile(l.Path)
+
+	if err != nil {
+		return conf.Configuration{}, err
+	}
+
+	var des = deserialization.YamlDeserializer{}
+
+	configuration, err := des.Deserialize(rawFile)
+
+	if err != nil {
+		return conf.Configuration{}, err
+	}
+
+	return configuration, nil
 }
 
 func (l localFileReader) Description() string {

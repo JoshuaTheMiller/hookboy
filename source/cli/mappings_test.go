@@ -94,7 +94,7 @@ type builder struct {
 	Error           error
 }
 
-func (b *builder) Construct(configurationPath string) (hookboy.Application, error) {
+func (b *builder) Construct() (hookboy.Application, error) {
 	if b.Error != nil {
 		return nil, b.Error
 	}
