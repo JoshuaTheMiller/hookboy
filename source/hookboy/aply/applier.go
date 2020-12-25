@@ -21,7 +21,7 @@ func Install(configuration conf.Configuration) (string, error) {
 		}
 
 		if hook.Statement != "" {
-			filePath, err := generateStatementFile(hook.HookName, hook.Statement)
+			filePath, err := generateStatementFile(hook.HookName, hook.Statement, configuration)
 
 			if err != nil {
 				return "", err
@@ -154,9 +154,10 @@ exit 0`
 	return err2
 }
 
-func generateStatementFile(fileName string, statement string) (string, error) {
-	os.MkdirAll(conf.GrappleCacheDir, os.ModePerm)
-	var filePath = conf.GrappleCacheDir + "/" + fileName + "-statement"
+func generateStatementFile(fileName string, statement string, conf conf.Configuration) (string, error) {
+	var cacheDir = conf.GetCacheDirectory()
+	os.MkdirAll(cacheDir, os.ModePerm)
+	var filePath = cacheDir + "/" + fileName + "-statement"
 	file, err := os.Create(filePath)
 
 	if err != nil {

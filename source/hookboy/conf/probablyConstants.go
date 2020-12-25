@@ -20,8 +20,5 @@ var RecognizedHooks = [...]string{
 // should be applied to
 var ActualGitHooksDir = ".git/hooks/"
 
-// GrappleCacheDir the location where temporary files should be stored
-var GrappleCacheDir = ".grapple-cache"
-
 // DefaultLocalHooksDir the directory where local hooks can be found
 var DefaultLocalHooksDir = "./hooks"

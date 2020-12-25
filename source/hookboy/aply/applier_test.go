@@ -71,15 +71,18 @@ exit 0`
 	}
 }
 
+// TODO This test is depending on too many things... Could be a sign that the func under test is doing too many things
 func TestGenerateStatementFileIsAsExpected(t *testing.T) {
 	var statementName = "SomeStatement"
 	var someStatement = "SomeStatement"
 
-	generateStatementFile(statementName, someStatement)
+	var conf = conf.Configuration{}
+	var cachePath = conf.GetCacheDirectory()
+	generateStatementFile(statementName, someStatement, conf)
 
 	// After testing this, it is obviously not clear that the func above
 	// will generate a file at the path below...
-	var filePath = fmt.Sprintf(".grapple-cache/%s-statement", statementName)
+	var filePath = fmt.Sprintf("%s/%s-statement", cachePath, statementName)
 	var contentBytes, error = ioutil.ReadFile(filePath)
 
 	if error != nil {
@@ -140,7 +143,7 @@ func TestThatHookStatementsGetInstalledProperly(t *testing.T) {
 
 	var actualContents = string(contentBytes)
 	var expectedContents = `#!/bin/sh
-retVal0=exec ".grapple-cache/post-update-statement" "$@" 
+retVal0=exec "/.hookboy-cache/post-update-statement" "$@" 
 retVal0=$?
 
 
