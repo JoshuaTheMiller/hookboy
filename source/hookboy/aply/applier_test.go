@@ -131,7 +131,8 @@ func TestThatHookStatementsGetInstalledProperly(t *testing.T) {
 		},
 	}
 
-	Install(configuration)
+	var applier = GetApplier()
+	applier.Install(configuration)
 
 	var filePath = fmt.Sprintf(".git/hooks/%s", hookName)
 	var contentBytes, error = ioutil.ReadFile(filePath)
@@ -185,7 +186,8 @@ func TestThatLocalHooksGetInstalledProperly(t *testing.T) {
 		AutoAddHooks: conf.ByFileName,
 	}
 
-	Install(configuration)
+	var applier = GetApplier()
+	applier.Install(configuration)
 
 	var filePath = fmt.Sprintf(".git/hooks/%s", hookName)
 	var contentBytes, error = ioutil.ReadFile(filePath)
