@@ -82,13 +82,13 @@ func (ab *applierboy) Install(configuration conf.Configuration) (string, error) 
 		ab.addHooksByFileName(configuration.LocalHookDir)
 	}
 
-	return writeHookFiles(ab.WriteFile, ab.FilesToCreate)
+	return writeHookFiles(ab.WriteFile, ab.FilesToCreate, conf.ActualGitHooksDir)
 }
 
-func writeHookFiles(writeFile func(filename string, content string) error, filesToCreate map[string][]string) (string, error) {
+func writeHookFiles(writeFile func(filename string, content string) error, filesToCreate map[string][]string, baseDir string) (string, error) {
 	for fileName, linesForFile := range filesToCreate {
 		var content = generateHookFile(linesForFile)
-		var fullFileName = conf.ActualGitHooksDir + "/" + fileName
+		var fullFileName = baseDir + "/" + fileName
 		var createHookFileError = writeFile(fullFileName, content)
 
 		if createHookFileError != nil {

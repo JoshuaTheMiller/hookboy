@@ -253,3 +253,26 @@ func TestAddHooksReturnsEarlyOnError(t *testing.T) {
 		t.Errorf("Actual error not as expected. Expected '%s', received '%s'", expectedError, actualError)
 	}
 }
+
+//writeHookFiles(writeFile func(filename string, content string) error, filesToCreate map[string][]string, baseDir string) (string, error) {
+func TestWriteHookFilesReturnsErrorWhenExpected(t *testing.T) {
+	var errorMessage = errors.New("Some message")
+
+	var errorReturningWriteFunc = func(filename string, content string) error {
+		return errorMessage
+	}
+	var someMap = map[string][]string{"na": []string{"line"}}
+
+	var _, actualError = writeHookFiles(errorReturningWriteFunc, someMap, "")
+
+	var expectedError = errorMessage
+
+	if actualError == nil {
+		t.Error("Expected error, found none")
+		return
+	}
+
+	if expectedError != actualError {
+		t.Errorf("Excted '%s', received '%s", expectedError, actualError)
+	}
+}
