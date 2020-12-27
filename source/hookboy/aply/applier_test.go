@@ -37,7 +37,7 @@ func TestGenerateExpectedLineFromFile(t *testing.T) {
 func TestGeneratedFileIsAsExpected(t *testing.T) {
 	var fileName = "samplefortest"
 	var linesToAdd = []string{"line1", "line2"}
-	createBashExecFile(fileName, linesToAdd)
+	createActualGitHookFile(fileName, linesToAdd)
 
 	var filePath = fmt.Sprintf(".git/hooks/%s", fileName)
 	var contentBytes, error = ioutil.ReadFile(filePath)

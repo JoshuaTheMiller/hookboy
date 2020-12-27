@@ -20,10 +20,12 @@ type Applier interface {
 
 type applierboy struct {
 	FilesToCreate map[string][]string
+	ReadDir       func(dirname string) ([]os.FileInfo, error)
 }
 
 func (ab *applierboy) instantiate() {
 	ab.FilesToCreate = make(map[string][]string)
+	ab.ReadDir = ioutil.ReadDir
 }
 
 // Install installs the hooks with the given configuration
@@ -59,22 +61,21 @@ func (ab *applierboy) Install(configuration conf.Configuration) (string, error) 
 	}
 
 	for fileName, linesForFile := range ab.FilesToCreate {
-		var createBashError = createBashExecFile(fileName, linesForFile)
+		var createHookFileError = createActualGitHookFile(fileName, linesForFile)
 
-		if createBashError != nil {
-			return "", createBashError
+		if createHookFileError != nil {
+			return "", createHookFileError
 		}
 	}
 
 	return hooksInstalledMessage, nil
 }
 
-func (ab *applierboy) addHooksByFileName(localHooksDir string) {
-	files, err := ioutil.ReadDir(localHooksDir)
+func (ab *applierboy) addHooksByFileName(localHooksDir string) error {
+	files, err := ab.ReadDir(localHooksDir)
 
 	if err != nil {
-		// Should return actual error
-		return
+		return err
 	}
 
 	for _, f := range files {
@@ -95,6 +96,8 @@ func (ab *applierboy) addHooksByFileName(localHooksDir string) {
 			}
 		}
 	}
+
+	return nil
 }
 
 func itemExists(arrayType interface{}, item interface{}) bool {
@@ -126,7 +129,7 @@ func generateLineFromFile(fileToInclude conf.HookFile) string {
 	return sb.String()
 }
 
-func createBashExecFile(fileName string, linesToAdd []string) error {
+func createActualGitHookFile(fileName string, linesToAdd []string) error {
 	file, err := os.Create(conf.ActualGitHooksDir + "/" + fileName)
 
 	if err != nil {
@@ -134,7 +137,7 @@ func createBashExecFile(fileName string, linesToAdd []string) error {
 	}
 	defer file.Close()
 
-	var execFile = generateBashExecFile(linesToAdd)
+	var execFile = generateHookFile(linesToAdd)
 
 	_, err2 := file.WriteString(execFile)
 
@@ -150,7 +153,7 @@ exit 1
 fi
 exit 0`
 
-func generateBashExecFile(linesToAdd []string) string {
+func generateHookFile(linesToAdd []string) string {
 	var formattedLinesToAdd strings.Builder
 	for index, line := range linesToAdd {
 		var line = fmt.Sprintf("retVal%d=%s\nretVal%d=$?\n", index, line, index)
