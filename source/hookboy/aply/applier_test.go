@@ -226,3 +226,50 @@ exit 0`
 		t.Errorf("Test cleanup failed! Unable to remove file at '%s': '%s'", pathToHook, fileRemoveError.Error())
 	}
 }
+
+type simpleFileForTest struct {
+	name string
+}
+
+func (sf simpleFileForTest) Name() string {
+	return sf.name
+}
+
+func TestAddHooksByFileNameAddsToExistingHooks(t *testing.T) {
+	// must be a recongized hook for now
+	var hookToAddTo = "commit-msg"
+
+	var originalItems = map[string][]string{
+		hookToAddTo: []string{"existing statement line for hook"},
+	}
+
+	var fileToAdd = hookToAddTo
+
+	var applier = applierboy{
+		FilesToCreate: originalItems,
+		ReadDir: func(dirname string) ([]simpleFile, error) {
+			return []simpleFile{
+				simpleFileForTest{
+					name: fileToAdd,
+				},
+			}, nil
+		},
+	}
+
+	var err = applier.addHooksByFileName("doesnotmatter")
+
+	if err != nil {
+		t.Errorf("Found error when expected none: %s", err)
+		return
+	}
+
+	if len(applier.FilesToCreate) != 1 {
+		t.Errorf("Expected amount of hooks in list to be 1")
+	}
+
+	var files = applier.FilesToCreate[hookToAddTo]
+
+	if len(files) != 2 {
+		t.Errorf("Expected amount of hooks in list to be 2")
+	}
+}

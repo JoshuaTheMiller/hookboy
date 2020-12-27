@@ -18,14 +18,28 @@ type Applier interface {
 	Install(configuration conf.Configuration) (string, error)
 }
 
+type simpleFile interface {
+	Name() string
+}
+
 type applierboy struct {
 	FilesToCreate map[string][]string
-	ReadDir       func(dirname string) ([]os.FileInfo, error)
+	ReadDir       func(dirname string) ([]simpleFile, error)
 }
 
 func (ab *applierboy) instantiate() {
 	ab.FilesToCreate = make(map[string][]string)
-	ab.ReadDir = ioutil.ReadDir
+	ab.ReadDir = func(dir string) ([]simpleFile, error) {
+		var files, err = ioutil.ReadDir(dir)
+
+		data := make([]simpleFile, len(files))
+
+		for i := range files {
+			data[i] = simpleFile(files[i])
+		}
+
+		return data, err
+	}
 }
 
 // Install installs the hooks with the given configuration
