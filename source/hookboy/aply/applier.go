@@ -25,21 +25,29 @@ type simpleFile interface {
 type applierboy struct {
 	FilesToCreate map[string][]string
 	ReadDir       func(dirname string) ([]simpleFile, error)
+	WriteFile     func(filename string, content string) error
+}
+
+func readDir(dir string) ([]simpleFile, error) {
+	var files, err = ioutil.ReadDir(dir)
+
+	data := make([]simpleFile, len(files))
+
+	for i := range files {
+		data[i] = simpleFile(files[i])
+	}
+
+	return data, err
+}
+
+func writeFile(filename string, content string) error {
+	return ioutil.WriteFile(filename, []byte(content), os.ModePerm)
 }
 
 func (ab *applierboy) instantiate() {
 	ab.FilesToCreate = make(map[string][]string)
-	ab.ReadDir = func(dir string) ([]simpleFile, error) {
-		var files, err = ioutil.ReadDir(dir)
-
-		data := make([]simpleFile, len(files))
-
-		for i := range files {
-			data[i] = simpleFile(files[i])
-		}
-
-		return data, err
-	}
+	ab.ReadDir = readDir
+	ab.WriteFile = writeFile
 }
 
 // Install installs the hooks with the given configuration
@@ -53,7 +61,7 @@ func (ab *applierboy) Install(configuration conf.Configuration) (string, error) 
 		}
 
 		if hook.Statement != "" {
-			filePath, err := generateStatementFile(hook.HookName, hook.Statement, configuration)
+			filePath, err := ab.generateStatementFile(hook.HookName, hook.Statement, configuration)
 
 			if err != nil {
 				return "", err
@@ -75,7 +83,9 @@ func (ab *applierboy) Install(configuration conf.Configuration) (string, error) 
 	}
 
 	for fileName, linesForFile := range ab.FilesToCreate {
-		var createHookFileError = createActualGitHookFile(fileName, linesForFile)
+		var content = generateHookFile(linesForFile)
+		var fullFileName = conf.ActualGitHooksDir + "/" + fileName
+		var createHookFileError = ab.WriteFile(fullFileName, content)
 
 		if createHookFileError != nil {
 			return "", createHookFileError
@@ -143,21 +153,6 @@ func generateLineFromFile(fileToInclude conf.HookFile) string {
 	return sb.String()
 }
 
-func createActualGitHookFile(fileName string, linesToAdd []string) error {
-	file, err := os.Create(conf.ActualGitHooksDir + "/" + fileName)
-
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	var execFile = generateHookFile(linesToAdd)
-
-	_, err2 := file.WriteString(execFile)
-
-	return err2
-}
-
 var fileTemplateString = `#!/bin/sh
 insertLinesHere
 
@@ -192,20 +187,18 @@ func generateHookFile(linesToAdd []string) string {
 	return withConditionalInserted
 }
 
-func generateStatementFile(fileName string, statement string, conf conf.Configuration) (string, error) {
+func (ab applierboy) generateStatementFile(fileName string, statement string, conf conf.Configuration) (string, error) {
 	var cacheDir = conf.GetCacheDirectory()
 	os.MkdirAll(cacheDir, os.ModePerm)
 	var filePath = cacheDir + "/" + fileName + "-statement"
-	file, err := os.Create(filePath)
+
+	var err = ab.WriteFile(filePath, statement)
 
 	if err != nil {
 		return "", err
 	}
-	defer file.Close()
 
-	_, err2 := file.WriteString(statement)
-
-	return filePath, err2
+	return filePath, nil
 }
 
 // HooksInstalledMessage

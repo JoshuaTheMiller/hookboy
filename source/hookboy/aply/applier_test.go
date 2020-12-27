@@ -33,74 +33,71 @@ func TestGenerateExpectedLineFromFile(t *testing.T) {
 	}
 }
 
-// More of an Acceptance Test, as it is fairly high level and depends on the file system
-func TestGeneratedFileIsAsExpected(t *testing.T) {
-	var fileName = "samplefortest"
-	var linesToAdd = []string{"line1", "line2"}
-	createActualGitHookFile(fileName, linesToAdd)
+// // More of an Acceptance Test, as it is fairly high level and depends on the file system
+// func TestGeneratedFileIsAsExpected(t *testing.T) {
+// 	var fileName = "samplefortest"
+// 	var linesToAdd = []string{"line1", "line2"}
+// 	createActualGitHookFile(fileName, linesToAdd)
 
-	var filePath = fmt.Sprintf(".git/hooks/%s", fileName)
-	var contentBytes, error = ioutil.ReadFile(filePath)
+// 	var filePath = fmt.Sprintf(".git/hooks/%s", fileName)
+// 	var contentBytes, error = ioutil.ReadFile(filePath)
 
-	if error != nil {
-		t.Errorf("File generation appears broken: %s", error.Error())
-	}
+// 	if error != nil {
+// 		t.Errorf("File generation appears broken: %s", error.Error())
+// 	}
 
-	var actualContents = string(contentBytes)
-	var expectedContents = `#!/bin/sh
-retVal0=line1
-retVal0=$?
-retVal1=line2
-retVal1=$?
+// 	var actualContents = string(contentBytes)
+// 	var expectedContents = `#!/bin/sh
+// retVal0=line1
+// retVal0=$?
+// retVal1=line2
+// retVal1=$?
 
+// if [ $retVal0 -ne 0 ] || [ $retVal1 -ne 0 ];
+// then
+// exit 1
+// fi
+// exit 0`
 
-if [ $retVal0 -ne 0 ] || [ $retVal1 -ne 0 ];
-then
-exit 1
-fi
-exit 0`
+// 	if expectedContents != actualContents {
+// 		t.Errorf("Generated file incorrect. Expected '%s', found '%s'", expectedContents, actualContents)
+// 	}
 
-	if expectedContents != actualContents {
-		t.Errorf("Generated file incorrect. Expected '%s', found '%s'", expectedContents, actualContents)
-	}
+// 	var fileRemoveError = os.Remove(filePath)
 
-	var fileRemoveError = os.Remove(filePath)
+// 	if fileRemoveError != nil {
+// 		t.Errorf("Test cleanup failed! Unable to remove file at '%s': '%s'", filePath, fileRemoveError.Error())
+// 	}
+// }
 
-	if fileRemoveError != nil {
-		t.Errorf("Test cleanup failed! Unable to remove file at '%s': '%s'", filePath, fileRemoveError.Error())
-	}
-}
-
-// TODO This test is depending on too many things... Could be a sign that the func under test is doing too many things
 func TestGenerateStatementFileIsAsExpected(t *testing.T) {
 	var statementName = "SomeStatement"
 	var someStatement = "SomeStatement"
 
+	var actualFileName = ""
+	var actualContents = ""
+
 	var conf = conf.Configuration{}
-	var cachePath = conf.GetCacheDirectory()
-	generateStatementFile(statementName, someStatement, conf)
+	var ab = applierboy{
+		WriteFile: func(fileName string, content string) error {
+			actualFileName = fileName
+			actualContents = content
 
-	// After testing this, it is obviously not clear that the func above
-	// will generate a file at the path below...
-	var filePath = fmt.Sprintf("%s/%s-statement", cachePath, statementName)
-	var contentBytes, error = ioutil.ReadFile(filePath)
-
-	if error != nil {
-		t.Errorf("File generation appears broken: %s", error.Error())
-		return
+			return nil
+		},
 	}
 
-	var actualContents = string(contentBytes)
+	ab.generateStatementFile(statementName, someStatement, conf)
+
 	var expectedContents = someStatement
+	var expectedFileName = conf.GetCacheDirectory() + "/" + statementName + "-statement"
 
 	if expectedContents != actualContents {
 		t.Errorf("Generated file incorrect. Expected '%s', found '%s'", expectedContents, actualContents)
 	}
 
-	var fileRemoveError = os.Remove(filePath)
-
-	if fileRemoveError != nil {
-		t.Errorf("Test cleanup failed! Unable to remove file at '%s': '%s'", filePath, fileRemoveError.Error())
+	if expectedFileName != actualFileName {
+		t.Errorf("Generated filename incorrect. Expected '%s', found '%s'", expectedFileName, actualFileName)
 	}
 }
 
