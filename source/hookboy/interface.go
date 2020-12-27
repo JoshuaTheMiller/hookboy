@@ -24,12 +24,13 @@ type Builder interface {
 }
 
 type hookboyTheAppliction struct {
+	Applier       aply.Applier
 	Configuration conf.Configuration
 	CE            source.ConfigurationExposer
 }
 
 func (hb *hookboyTheAppliction) Install() (string, error) {
-	return aply.Install(hb.Configuration)
+	return hb.Applier.Install(hb.Configuration)
 }
 
 func (hb *hookboyTheAppliction) CurrentConfiguration() (conf.Configuration, error) {
@@ -55,6 +56,7 @@ func (b *bob) Construct() (Application, error) {
 	return &hookboyTheAppliction{
 		Configuration: configuration,
 		CE:            source.GetConfigurationExposer(),
+		Applier:       aply.GetApplier(),
 	}, nil
 }
 

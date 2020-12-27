@@ -83,3 +83,19 @@ func TestHookboyConfigSourceFunctions(t *testing.T) {
 		t.Errorf("Output incorrect! Expected\n'%s'\nreceived\n'%s'", expectedOutput, actualOutput)
 	}
 }
+
+func TestHookboyInstallFunction(t *testing.T) {
+	var flagToTest = []string{"install"}
+	var output, err = exec.Command(getOsDependentCommandPath(), flagToTest...).Output()
+
+	if err != nil {
+		t.Errorf("Command failed to run: '%s'", err)
+		return
+	}
+
+	var expectedOutput = "Hooks installed!"
+	var actualOutput = string(output)
+	if actualOutput != expectedOutput {
+		t.Errorf("Output incorrect! Expected\n'%s'\nreceived\n'%s'", expectedOutput, actualOutput)
+	}
+}
