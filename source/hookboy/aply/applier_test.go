@@ -1,6 +1,7 @@
 package aply
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -231,5 +232,24 @@ func TestAddHooksByFileNameAddsToExistingHooks(t *testing.T) {
 
 	if len(files) != 2 {
 		t.Errorf("Expected amount of hooks in list to be 2")
+	}
+}
+
+func TestAddHooksReturnsEarlyOnError(t *testing.T) {
+	var someError = errors.New("asdfasdf")
+
+	var ab = applierboy{
+		ReadDir: func(dirname string) ([]simpleFile, error) {
+			return nil, someError
+		},
+	}
+
+	// This doesn't really test that the method returns early, it just tests that the appropriate error is
+	// returned.
+	var actualError = ab.addHooksByFileName("doesNotMatterForThisTest")
+	var expectedError = someError
+
+	if expectedError != actualError {
+		t.Errorf("Actual error not as expected. Expected '%s', received '%s'", expectedError, actualError)
 	}
 }
