@@ -4,8 +4,8 @@ import (
 	"github.com/hookboy/source/hookboy/conf"
 )
 
-func (p prepboy) getHooksByFileName(localHooksDir string) (eFiles []executableFile, err error) {
-	var files, readErr = p.ReadDir(localHooksDir)
+func getHooksByFileName(localHooksDir string, readDir func(dirname string) ([]simpleFile, error)) (eFiles []executableFile, err error) {
+	var files, readErr = readDir(localHooksDir)
 
 	if readErr != nil {
 		return nil, readErr

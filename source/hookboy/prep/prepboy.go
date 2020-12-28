@@ -47,7 +47,7 @@ func (p prepboy) PrepareHookfileInfo(c conf.Configuration) (ftc []FileToCreate, 
 	}
 
 	if c.AutoAddHooks == conf.ByFileName {
-		var files, err = p.getHooksByFileName(c.LocalHookDir)
+		var files, err = getHooksByFileName(c.LocalHookDir, p.ReadDir)
 
 		if err != nil {
 			return nil, prepboyError{
