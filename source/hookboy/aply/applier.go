@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/hookboy/source/hookboy/conf"
+	"github.com/hookboy/source/hookboy/prep"
 )
 
 func GetApplier() Applier {
@@ -54,35 +55,25 @@ func (ab *applierboy) instantiate() {
 func (ab *applierboy) Install(configuration conf.Configuration) (string, error) {
 	ab.instantiate()
 
-	for _, hook := range configuration.Hooks {
-		lines := []string{}
-		for _, fileToInclude := range hook.Files {
-			lines = append(lines, generateLineFromFile(fileToInclude))
+	var prepboy = prep.Instantiate(configuration)
+
+	var filesToCreate, _ = prepboy.PrepareHookfileInfo(configuration)
+
+	return writeFiles(ab.WriteFile, filesToCreate)
+}
+
+func writeFiles(writeFile func(filename string, content string) error, filesToCreate []prep.FileToCreate) (string, error) {
+	for _, ftc := range filesToCreate {
+		var content = ftc.Contents()
+		var fullFileName = ftc.Path()
+		var createHookFileError = writeFile(fullFileName, content)
+
+		if createHookFileError != nil {
+			return "", createHookFileError
 		}
-
-		if hook.Statement != "" {
-			filePath, err := ab.generateStatementFile(hook.HookName, hook.Statement, configuration)
-
-			if err != nil {
-				return "", err
-			}
-
-			var sb strings.Builder
-
-			sb.WriteString("exec ")
-			sb.WriteString("\"" + filePath + "\" \"$@\" ")
-
-			lines = append(lines, sb.String())
-		}
-
-		ab.FilesToCreate[hook.HookName] = lines
 	}
 
-	if configuration.AutoAddHooks == conf.ByFileName {
-		ab.addHooksByFileName(configuration.LocalHookDir)
-	}
-
-	return writeHookFiles(ab.WriteFile, ab.FilesToCreate, conf.ActualGitHooksDir)
+	return hooksInstalledMessage, nil
 }
 
 func writeHookFiles(writeFile func(filename string, content string) error, filesToCreate map[string][]string, baseDir string) (string, error) {

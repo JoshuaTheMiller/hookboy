@@ -38,12 +38,13 @@ func TestMain(m *testing.M) {
 
 	var exitCode = m.Run()
 
-	var removeError = os.RemoveAll(testFolderName)
+	// TODO: Why does commenting out the following cause this test to successfully get past windows firewall?
+	// var removeError = os.RemoveAll(testFolderName)
 
-	if removeError != nil {
-		var panicMessage = fmt.Sprintf("Failed to remove test folder: '%s'", testFolderName)
-		panic(panicMessage)
-	}
+	// if removeError != nil {
+	// 	var panicMessage = fmt.Sprintf("Failed to remove test folder: '%s'", testFolderName)
+	// 	panic(panicMessage)
+	// }
 
 	os.Exit(exitCode)
 }

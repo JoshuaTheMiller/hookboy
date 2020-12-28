@@ -172,7 +172,7 @@ exit 0`
 	expectedContents = strings.Replace(expectedContents, "theActualLocalHookDir", localHookDir, 1)
 
 	if expectedContents != actualContents {
-		t.Errorf("Generated file incorrect. Expected '%s', found '%s'", expectedContents, actualContents)
+		t.Errorf("Generated file incorrect. Expected \n'%s'\n, found \n'%s'\n", expectedContents, actualContents)
 	}
 
 	var testFolderCleanupError = os.RemoveAll(localHookDir)
