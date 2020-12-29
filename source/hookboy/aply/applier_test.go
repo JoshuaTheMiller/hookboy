@@ -1,7 +1,6 @@
 package aply
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -10,73 +9,6 @@ import (
 
 	"github.com/hookboy/source/hookboy/conf"
 )
-
-func TestGenerateExpectedLineFromFile(t *testing.T) {
-
-	var extraArgNameValue = "extraArgName"
-	var extraArgValueValue = "extraArgValue"
-	var ea = conf.ExtraArguments{
-		Name:  extraArgNameValue,
-		Value: extraArgValueValue,
-	}
-
-	var pathValue = "somePath"
-	var hookFile = conf.HookFile{
-		Path:           pathValue,
-		ExtraArguments: []conf.ExtraArguments{ea},
-	}
-
-	var expectedLine = fmt.Sprintf("exec \"%s\" \"$@\" %s=%s ", pathValue, extraArgNameValue, extraArgValueValue)
-	var actualLine = generateLineFromFile(hookFile)
-
-	if actualLine != expectedLine {
-		t.Errorf("Generated Line Incorrect. Expected '%s', received '%s'", expectedLine, actualLine)
-	}
-}
-
-func TestGenerateStatementFileIsAsExpected(t *testing.T) {
-	var statementName = "SomeStatement"
-	var someStatement = "SomeStatement"
-
-	var actualFileName = ""
-	var actualContents = ""
-
-	var conf = conf.Configuration{}
-	var ab = applierboy{
-		WriteFile: func(fileName string, content string) error {
-			actualFileName = fileName
-			actualContents = content
-
-			return nil
-		},
-	}
-
-	ab.generateStatementFile(statementName, someStatement, conf)
-
-	var expectedContents = someStatement
-	var expectedFileName = conf.GetCacheDirectory() + "/" + statementName + "-statement"
-
-	if expectedContents != actualContents {
-		t.Errorf("Generated file incorrect. Expected '%s', found '%s'", expectedContents, actualContents)
-	}
-
-	if expectedFileName != actualFileName {
-		t.Errorf("Generated filename incorrect. Expected '%s', found '%s'", expectedFileName, actualFileName)
-	}
-}
-
-func TestItemExists(t *testing.T) {
-	var someItem = "what"
-	var someArray = [...]string{someItem, "what2"}
-
-	// itemExists is not very clear as far as what param goes where
-	// #CopyPasteFails
-	var itemExists = itemExists(someArray, someItem)
-
-	if !itemExists {
-		t.Error("Item existed, but not found")
-	}
-}
 
 func TestThatHookStatementsGetInstalledProperly(t *testing.T) {
 	var hookName = "post-update"
@@ -172,7 +104,7 @@ exit 0`
 	expectedContents = strings.Replace(expectedContents, "theActualLocalHookDir", localHookDir, 1)
 
 	if expectedContents != actualContents {
-		t.Errorf("Generated file incorrect. Expected '%s', found '%s'", expectedContents, actualContents)
+		t.Errorf("Generated file incorrect. Expected \n'%s'\n, found \n'%s'\n", expectedContents, actualContents)
 	}
 
 	var testFolderCleanupError = os.RemoveAll(localHookDir)
@@ -194,85 +126,4 @@ type simpleFileForTest struct {
 
 func (sf simpleFileForTest) Name() string {
 	return sf.name
-}
-
-func TestAddHooksByFileNameAddsToExistingHooks(t *testing.T) {
-	// must be a recongized hook for now
-	var hookToAddTo = "commit-msg"
-
-	var originalItems = map[string][]string{
-		hookToAddTo: []string{"existing statement line for hook"},
-	}
-
-	var fileToAdd = hookToAddTo
-
-	var applier = applierboy{
-		FilesToCreate: originalItems,
-		ReadDir: func(dirname string) ([]simpleFile, error) {
-			return []simpleFile{
-				simpleFileForTest{
-					name: fileToAdd,
-				},
-			}, nil
-		},
-	}
-
-	var err = applier.addHooksByFileName("doesnotmatter")
-
-	if err != nil {
-		t.Errorf("Found error when expected none: %s", err)
-		return
-	}
-
-	if len(applier.FilesToCreate) != 1 {
-		t.Errorf("Expected amount of hooks in list to be 1")
-	}
-
-	var files = applier.FilesToCreate[hookToAddTo]
-
-	if len(files) != 2 {
-		t.Errorf("Expected amount of hooks in list to be 2")
-	}
-}
-
-func TestAddHooksReturnsEarlyOnError(t *testing.T) {
-	var someError = errors.New("asdfasdf")
-
-	var ab = applierboy{
-		ReadDir: func(dirname string) ([]simpleFile, error) {
-			return nil, someError
-		},
-	}
-
-	// This doesn't really test that the method returns early, it just tests that the appropriate error is
-	// returned.
-	var actualError = ab.addHooksByFileName("doesNotMatterForThisTest")
-	var expectedError = someError
-
-	if expectedError != actualError {
-		t.Errorf("Actual error not as expected. Expected '%s', received '%s'", expectedError, actualError)
-	}
-}
-
-//writeHookFiles(writeFile func(filename string, content string) error, filesToCreate map[string][]string, baseDir string) (string, error) {
-func TestWriteHookFilesReturnsErrorWhenExpected(t *testing.T) {
-	var errorMessage = errors.New("Some message")
-
-	var errorReturningWriteFunc = func(filename string, content string) error {
-		return errorMessage
-	}
-	var someMap = map[string][]string{"na": []string{"line"}}
-
-	var _, actualError = writeHookFiles(errorReturningWriteFunc, someMap, "")
-
-	var expectedError = errorMessage
-
-	if actualError == nil {
-		t.Error("Expected error, found none")
-		return
-	}
-
-	if expectedError != actualError {
-		t.Errorf("Excted '%s', received '%s", expectedError, actualError)
-	}
 }
