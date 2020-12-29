@@ -27,6 +27,98 @@ func Test_PrepareHookfileInfo_PreparesNoFilesForGenerationWhenThereAreNoneToGene
 	}
 }
 
+func Test_PrepareHookfileInfo_Prepares2FilesAsExpected(t *testing.T) {
+	p := prepboy{}
+	c := conf.Configuration{
+		AutoAddHooks: conf.No,
+		Hooks: []conf.Hooks{
+			conf.Hooks{
+				// Will prepare the hookfile itself
+				HookName: "commit-msg",
+				// Will also prepare another file for this statement
+				Statement: "S-1",
+				Files: []conf.HookFile{
+					conf.HookFile{
+						Path: "prepboy_test.go",
+					},
+				},
+			},
+		},
+	}
+	ftc, err := p.PrepareHookfileInfo(c)
+
+	if err != nil {
+		t.Error("Expected error to be nil")
+		return
+	}
+
+	expectedAmountOfFilesToGenerate := 2
+	actualAmountOfFilesToGenerate := len(ftc)
+
+	if actualAmountOfFilesToGenerate != expectedAmountOfFilesToGenerate {
+		t.Errorf("Expected the amount of files to generate to be 2, one for the hookfile, one for the included statement")
+		return
+	}
+}
+
+func Test_PrepareHookfileInfo_PropgatesErrorWhenTryingToReadNonExistantFolder(t *testing.T) {
+	p := prepboy{}
+	c := conf.Configuration{
+		AutoAddHooks: conf.ByFileName,
+	}
+
+	_, err := p.PrepareHookfileInfo(c)
+
+	if err == nil {
+		t.Error("Expected error to be present")
+		return
+	}
+
+	prepboyError, ok := err.(prepboyError)
+	if ok != true {
+		t.Error("Expected error to be prepboyError")
+		return
+	}
+
+	expectedDescription := "Error prepping hooks by filename"
+	if prepboyError.Error() != expectedDescription {
+		t.Error("Expected description does not match actual")
+	}
+}
+
+func Test_PrepareHookfileInfo_Prepares1FileWhenAutoAdding1File(t *testing.T) {
+	c := conf.Configuration{
+		AutoAddHooks: conf.ByFileName,
+	}
+	hookfileForTest := simpleFileForTest{
+		name: "commit-msg",
+	}
+	p := prepboy{
+		ReadDir: func(dirname string) ([]simpleFile, error) {
+			return []simpleFile{
+				hookfileForTest,
+			}, nil
+		},
+		Instantiated: true,
+		C:            c,
+	}
+
+	ftc, err := p.PrepareHookfileInfo(c)
+
+	if err != nil {
+		t.Error("Expected error to be nil")
+		return
+	}
+
+	expectedAmountOfFilesToGenerate := 1
+	actualAmountOfFilesToGenerate := len(ftc)
+
+	if actualAmountOfFilesToGenerate != expectedAmountOfFilesToGenerate {
+		t.Errorf("Expected the amount of files to generate to be 1: one for the hookfile")
+		return
+	}
+}
+
 func Test_Instantiate_ReturnsInstantiatedPrepboy(t *testing.T) {
 	c := conf.Configuration{
 		CacheDirectory: "somedir",

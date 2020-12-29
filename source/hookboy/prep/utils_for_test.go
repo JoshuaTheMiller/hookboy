@@ -27,3 +27,11 @@ func deleteFileSystemObjectForTest(options ...fileSystemObjectOptions) {
 		os.RemoveAll(opt.Name)
 	}
 }
+
+type simpleFileForTest struct {
+	name string
+}
+
+func (s simpleFileForTest) Name() string {
+	return s.name
+}
