@@ -2,6 +2,8 @@ package prep
 
 import "github.com/hookboy/source/hookboy/conf"
 
+// FileToCreate contains information about files that should
+// be created in later stages
 type FileToCreate interface {
 	Path() string
 	Contents() string
