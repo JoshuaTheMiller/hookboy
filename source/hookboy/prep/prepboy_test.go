@@ -3,7 +3,48 @@ package prep
 import (
 	"fmt"
 	"testing"
+
+	"github.com/hookboy/source/hookboy/conf"
 )
+
+func Test_PrepareHookfileInfo_PreparesNoFilesForGenerationWhenThereAreNoneToGenerate(t *testing.T) {
+	// TODO: control ReadDir to mitigate possible found hooks
+	p := prepboy{}
+	c := conf.Configuration{}
+	ftc, err := p.PrepareHookfileInfo(c)
+
+	if err != nil {
+		t.Error("Expected error to be nil")
+		return
+	}
+
+	expectedAmountOfFilesToGenerate := 0
+	actualAmountOfFilesToGenerate := len(ftc)
+
+	if actualAmountOfFilesToGenerate != expectedAmountOfFilesToGenerate {
+		t.Errorf("Expected the amount of files to generate to be 0, given that none were found or set via configuration")
+		return
+	}
+}
+
+func Test_Instantiate_ReturnsInstantiatedPrepboy(t *testing.T) {
+	c := conf.Configuration{
+		CacheDirectory: "somedir",
+	}
+	prepboy := Instantiate(c).(prepboy)
+
+	if prepboy.Instantiated != true {
+		t.Error("Expected prepboy to be instantiated")
+	}
+
+	if prepboy.C.CacheDirectory != c.CacheDirectory {
+		t.Error("Expected configuration to be the same")
+	}
+
+	if prepboy.ReadDir == nil {
+		t.Error("Expected ReadDir to be set")
+	}
+}
 
 func Test_readDir_ReturnsExpectedInformation(t *testing.T) {
 	dir := "testbin"
