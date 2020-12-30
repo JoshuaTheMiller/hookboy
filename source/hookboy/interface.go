@@ -3,9 +3,9 @@ package hookboy
 import (
 	"fmt"
 
-	"github.com/hookboy/source/hookboy/aply"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/conf/source"
+	"github.com/hookboy/source/hookboy/internal"
 )
 
 // Application defines the methods available for running the HookBoy
@@ -24,7 +24,7 @@ type Builder interface {
 }
 
 type hookboyTheAppliction struct {
-	Applier       aply.Applier
+	Applier       internal.Applier
 	Configuration conf.Configuration
 	CE            source.ConfigurationExposer
 }
@@ -56,7 +56,7 @@ func (b *bob) Construct() (Application, error) {
 	return &hookboyTheAppliction{
 		Configuration: configuration,
 		CE:            source.GetConfigurationExposer(),
-		Applier:       aply.GetApplier(),
+		Applier:       internal.GetApplier(),
 	}, nil
 }
 

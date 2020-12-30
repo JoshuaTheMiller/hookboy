@@ -8,16 +8,6 @@ import (
 	"github.com/hookboy/source/hookboy/internal"
 )
 
-// GetApplier returns an object that implements the Applier interface
-func GetApplier() Applier {
-	return &applierboy{}
-}
-
-// Applier configures hooks
-type Applier interface {
-	Install(configuration conf.Configuration) (string, error)
-}
-
 type applierboy struct {
 	WriteFile func(filename string, content string) error
 }
@@ -31,7 +21,7 @@ func (ab *applierboy) instantiate() {
 }
 
 // Install installs the hooks with the given configuration
-func (ab *applierboy) Install(configuration conf.Configuration) (string, error) {
+func (ab applierboy) Install(configuration conf.Configuration) (string, error) {
 	// TODO: should most likely accept files to create as a parameter, thus eliminating another
 	// dependency here.
 	// FileToCreate should be moved to an internal package as well (same with many of these interfaces)

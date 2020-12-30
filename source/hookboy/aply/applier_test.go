@@ -25,7 +25,7 @@ func TestThatHookStatementsGetInstalledProperly(t *testing.T) {
 		},
 	}
 
-	var applier = GetApplier()
+	var applier = applierboy{}
 	applier.Install(configuration)
 
 	var filePath = fmt.Sprintf(".git/hooks/%s", hookName)
@@ -80,7 +80,7 @@ func TestThatLocalHooksGetInstalledProperly(t *testing.T) {
 		AutoAddHooks: conf.ByFileName,
 	}
 
-	var applier = GetApplier()
+	var applier = applierboy{}
 	applier.Install(configuration)
 
 	var filePath = fmt.Sprintf(".git/hooks/%s", hookName)
