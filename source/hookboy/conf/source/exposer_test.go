@@ -1,9 +1,13 @@
 package source
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/hookboy/source/hookboy/internal"
+)
 
 func TestGetCurrentConfigurationSourceReturnsNoneWhenNoConfigurationIsPresent(t *testing.T) {
-	var exposer = GetConfigurationExposer()
+	var exposer = configurationExposer{}
 
 	var _, err = exposer.LocateCurrentConfigurationSource()
 
@@ -12,7 +16,7 @@ func TestGetCurrentConfigurationSourceReturnsNoneWhenNoConfigurationIsPresent(t 
 		return
 	}
 
-	if err != NoConfigurationSourceFoundError {
+	if err != internal.NoConfigurationSourceFoundError {
 		t.Errorf("Expected err to be 'NoConfigurationSourceFoundError, was: %s", err)
 	}
 }
@@ -31,7 +35,7 @@ func TestGetCurrentReturnsExpectedConfigurationSource(t *testing.T) {
 	creatFileSystemObjectForTest(fileSystemObject)
 	defer deleteFileSystemObjectForTest(fileSystemObject)
 
-	var exposer = GetConfigurationExposer()
+	var exposer = configurationExposer{}
 
 	var configSource, err = exposer.LocateCurrentConfigurationSource()
 
@@ -63,7 +67,7 @@ func TestGetCurrentReturnsExpectedConfiguration(t *testing.T) {
 	creatFileSystemObjectForTest(fileSystemObject)
 	defer deleteFileSystemObjectForTest(fileSystemObject)
 
-	var exposer = GetConfigurationExposer()
+	var exposer = configurationExposer{}
 
 	var config, err = exposer.RetrieveCurrentConfiguration()
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/hookboy/source/hookboy/conf"
-	"github.com/hookboy/source/hookboy/conf/source"
 	"github.com/hookboy/source/hookboy/internal"
 )
 
@@ -26,7 +25,7 @@ type Builder interface {
 type hookboyTheAppliction struct {
 	Applier       internal.Applier
 	Configuration conf.Configuration
-	CE            source.ConfigurationExposer
+	CE            internal.ConfigurationExposer
 }
 
 func (hb *hookboyTheAppliction) Install() (string, error) {
@@ -47,7 +46,9 @@ type bob struct {
 }
 
 func (b *bob) Construct() (Application, error) {
-	configuration, err := source.GetConfigurationExposer().RetrieveCurrentConfiguration()
+	ce := internal.GetConfigurationExposer()
+
+	configuration, err := ce.RetrieveCurrentConfiguration()
 
 	if err != nil {
 		return nil, err
@@ -55,7 +56,7 @@ func (b *bob) Construct() (Application, error) {
 
 	return &hookboyTheAppliction{
 		Configuration: configuration,
-		CE:            source.GetConfigurationExposer(),
+		CE:            ce,
 		Applier:       internal.GetApplier(),
 	}, nil
 }

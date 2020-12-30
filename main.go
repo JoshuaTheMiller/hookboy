@@ -8,6 +8,7 @@ import (
 	"github.com/hookboy/source/hookboy"
 
 	_ "github.com/hookboy/source/hookboy/aply"
+	_ "github.com/hookboy/source/hookboy/conf/source"
 	_ "github.com/hookboy/source/hookboy/prep"
 )
 

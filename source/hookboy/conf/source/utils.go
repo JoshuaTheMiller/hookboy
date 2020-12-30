@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+
+	"github.com/hookboy/source/hookboy/internal"
 )
 
 type fileSystemObjectCheckResult string
@@ -32,13 +34,13 @@ func readFile(path string) ([]byte, error) {
 	var result = checkForFileSystemObject(path)
 
 	if result == doesNotExist {
-		return nil, ConfigurationSourceError{
+		return nil, internal.ConfigurationSourceError{
 			Description: fmt.Sprintf("Cannot read nonexistant file: %s", path),
 		}
 	}
 
 	if result == folder {
-		return nil, ConfigurationSourceError{
+		return nil, internal.ConfigurationSourceError{
 			Description: fmt.Sprintf("Cannot read '%s' as it is a folder, not a file.", path),
 		}
 	}
@@ -47,7 +49,7 @@ func readFile(path string) ([]byte, error) {
 		bytes, err := ioutil.ReadFile(path)
 
 		if err != nil {
-			return nil, ConfigurationSourceError{
+			return nil, internal.ConfigurationSourceError{
 				Description: fmt.Sprintf("Problem reading configuration file: %s", path),
 			}
 		}
@@ -55,7 +57,7 @@ func readFile(path string) ([]byte, error) {
 		return bytes, nil
 	}
 
-	return nil, ConfigurationSourceError{
+	return nil, internal.ConfigurationSourceError{
 		Description: "Unsupported file reading result type",
 	}
 }
