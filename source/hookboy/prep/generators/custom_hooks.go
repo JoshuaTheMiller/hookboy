@@ -29,7 +29,7 @@ func (chg customHookGenerator) Generate(c conf.Configuration, readDir func(dirna
 
 			ef = append(ef, p.ExecutableFile{
 				AssociatedHook: hook.HookName,
-				Path:           statementFile.Path(),
+				Path:           statementFile.Path,
 			})
 		}
 	}

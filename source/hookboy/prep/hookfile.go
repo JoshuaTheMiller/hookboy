@@ -27,9 +27,9 @@ func generateHookFileContents(ef []p.ExecutableFile, c conf.Configuration) []int
 		var hookname = key
 		var executableFiles = values
 
-		var ftc = fileToCreate{
-			path:     getHookFilePath(hookname, c),
-			contents: generateHookFileContent(executableFiles),
+		var ftc = internal.FileToCreate{
+			Path:     getHookFilePath(hookname, c),
+			Contents: generateHookFileContent(executableFiles),
 		}
 
 		files = append(files, ftc)

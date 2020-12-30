@@ -64,13 +64,13 @@ func Test_CustomHook_Generate_ReturnsAsExpected(t *testing.T) {
 	}
 
 	expectedPath := "/.hookboy-cache/commit-msg-statement"
-	actualPath := ftc[0].Path()
+	actualPath := ftc[0].Path
 	if expectedPath != actualPath {
 		t.Errorf("Expected Path to be %s, received '%s'", expectedPath, actualPath)
 	}
 
 	expectedContents := "S-1"
-	actualContents := ftc[0].Contents()
+	actualContents := ftc[0].Contents
 	if expectedContents != actualContents {
 		t.Errorf("Expected Contents to be %s, received '%s'", expectedContents, actualContents)
 	}

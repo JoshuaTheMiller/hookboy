@@ -36,8 +36,8 @@ func (ab applierboy) Install(configuration conf.Configuration) (string, error) {
 
 func writeFiles(writeFile func(filename string, content string) error, filesToCreate []internal.FileToCreate) (string, error) {
 	for _, ftc := range filesToCreate {
-		var content = ftc.Contents()
-		var fullFileName = ftc.Path()
+		var content = ftc.Contents
+		var fullFileName = ftc.Path
 		var createHookFileError = writeFile(fullFileName, content)
 
 		if createHookFileError != nil {

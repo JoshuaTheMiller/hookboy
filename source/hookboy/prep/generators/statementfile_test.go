@@ -17,12 +17,13 @@ func Test_PrepareStatementFile_ConstructsAsExpected(t *testing.T) {
 
 	ftc := prepareStatementFile(hookname, statement, c)
 
-	if ftc.Contents() != statement {
+	if ftc.Contents != statement {
 		t.Errorf("Prepared statement file contents are incorrect.")
 	}
 
 	expectedPath := fmt.Sprintf("%s/.hookboy-cache/%s-statement", cachDir, hookname)
-	if ftc.Path() != expectedPath {
-		t.Errorf("Prepared statement file's path is incorrect (e '%s', a: '%s'", expectedPath, ftc.Path())
+	actualPath := ftc.Path
+	if actualPath != expectedPath {
+		t.Errorf("Prepared statement file's path is incorrect (e '%s', a: '%s'", expectedPath, actualPath)
 	}
 }

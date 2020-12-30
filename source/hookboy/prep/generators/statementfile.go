@@ -9,8 +9,8 @@ func prepareStatementFile(hookname string, statement string, c conf.Configuratio
 	var cacheDir = c.GetCacheDirectory()
 	var filePath = cacheDir + "/" + hookname + "-statement"
 
-	return fileToCreate{
-		path:     filePath,
-		contents: statement,
+	return internal.FileToCreate{
+		Path:     filePath,
+		Contents: statement,
 	}
 }
