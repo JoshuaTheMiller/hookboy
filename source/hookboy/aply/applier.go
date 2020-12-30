@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/hookboy/source/hookboy/conf"
-	"github.com/hookboy/source/hookboy/prep"
+	"github.com/hookboy/source/hookboy/internal"
 )
 
 // GetApplier returns an object that implements the Applier interface
@@ -37,14 +37,14 @@ func (ab *applierboy) Install(configuration conf.Configuration) (string, error) 
 	// FileToCreate should be moved to an internal package as well (same with many of these interfaces)
 	ab.instantiate()
 
-	var prepboy = prep.Instantiate(configuration)
+	var prepboy = internal.GetPrepper()
 
 	var filesToCreate, _ = prepboy.PrepareHookfileInfo(configuration)
 
 	return writeFiles(ab.WriteFile, filesToCreate)
 }
 
-func writeFiles(writeFile func(filename string, content string) error, filesToCreate []prep.FileToCreate) (string, error) {
+func writeFiles(writeFile func(filename string, content string) error, filesToCreate []internal.FileToCreate) (string, error) {
 	for _, ftc := range filesToCreate {
 		var content = ftc.Contents()
 		var fullFileName = ftc.Path()

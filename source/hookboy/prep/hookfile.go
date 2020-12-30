@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/hookboy/source/hookboy/conf"
+	"github.com/hookboy/source/hookboy/internal"
 )
 
 var fileTemplateString = `#!/bin/sh
@@ -16,10 +17,10 @@ exit 1
 fi
 exit 0`
 
-func generateHookFileContents(ef []executableFile, c conf.Configuration) []FileToCreate {
+func generateHookFileContents(ef []executableFile, c conf.Configuration) []internal.FileToCreate {
 	var filesGroupByHook = groupByHook(ef)
 
-	var files = []FileToCreate{}
+	var files = []internal.FileToCreate{}
 
 	for key, values := range filesGroupByHook {
 		var hookname = key

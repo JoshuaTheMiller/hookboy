@@ -4,18 +4,12 @@ import (
 	"io/ioutil"
 
 	"github.com/hookboy/source/hookboy/conf"
+	"github.com/hookboy/source/hookboy/internal"
 )
 
-// Instantiate returns a Prepper for external use
-func Instantiate(c conf.Configuration) Prepper {
-	var p = prepboy{}
-	p.instantiate(c)
-	return p
-}
-
-func (p prepboy) PrepareHookfileInfo(c conf.Configuration) (ftc []FileToCreate, e error) {
+func (p prepboy) PrepareHookfileInfo(c conf.Configuration) (ftc []internal.FileToCreate, e error) {
 	if p.Instantiated != true {
-		p.instantiate(c)
+		p.instantiate()
 	}
 
 	ef, ftc, err := generateExecutableFilesAndFilesToCreate(c, p.ReadDir)
@@ -31,7 +25,7 @@ func (p prepboy) PrepareHookfileInfo(c conf.Configuration) (ftc []FileToCreate, 
 	return ftc, nil
 }
 
-func generateExecutableFilesAndFilesToCreate(c conf.Configuration, readDir func(dirname string) ([]simpleFile, error)) (ef []executableFile, ftc []FileToCreate, err error) {
+func generateExecutableFilesAndFilesToCreate(c conf.Configuration, readDir func(dirname string) ([]simpleFile, error)) (ef []executableFile, ftc []internal.FileToCreate, err error) {
 	for _, hook := range c.Hooks {
 
 		for _, fileToInclude := range hook.Files {
@@ -76,11 +70,6 @@ func statementIsPresent(s string) bool {
 	return s != ""
 }
 
-// Prepper is used to prepare files to usage by Git Hook
-type Prepper interface {
-	PrepareHookfileInfo(c conf.Configuration) (ftc []FileToCreate, e error)
-}
-
 // TODO: Does this interface already exist?
 type simpleFile interface {
 	Name() string
@@ -88,12 +77,10 @@ type simpleFile interface {
 
 type prepboy struct {
 	Instantiated bool
-	C            conf.Configuration
 	ReadDir      func(dirname string) ([]simpleFile, error)
 }
 
-func (p *prepboy) instantiate(c conf.Configuration) {
-	p.C = c
+func (p *prepboy) instantiate() {
 	p.ReadDir = readDir
 	p.Instantiated = true
 }

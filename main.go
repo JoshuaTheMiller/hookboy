@@ -6,6 +6,8 @@ import (
 
 	"github.com/hookboy/source/cli"
 	"github.com/hookboy/source/hookboy"
+
+	_ "github.com/hookboy/source/hookboy/prep"
 )
 
 const (

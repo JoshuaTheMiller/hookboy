@@ -100,7 +100,6 @@ func Test_PrepareHookfileInfo_Prepares1FileWhenAutoAdding1File(t *testing.T) {
 			}, nil
 		},
 		Instantiated: true,
-		C:            c,
 	}
 
 	ftc, err := p.PrepareHookfileInfo(c)
@@ -120,17 +119,12 @@ func Test_PrepareHookfileInfo_Prepares1FileWhenAutoAdding1File(t *testing.T) {
 }
 
 func Test_Instantiate_ReturnsInstantiatedPrepboy(t *testing.T) {
-	c := conf.Configuration{
-		CacheDirectory: "somedir",
-	}
-	prepboy := Instantiate(c).(prepboy)
+	prepboy := prepboy{}
+
+	prepboy.instantiate()
 
 	if prepboy.Instantiated != true {
 		t.Error("Expected prepboy to be instantiated")
-	}
-
-	if prepboy.C.CacheDirectory != c.CacheDirectory {
-		t.Error("Expected configuration to be the same")
 	}
 
 	if prepboy.ReadDir == nil {

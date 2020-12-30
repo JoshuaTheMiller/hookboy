@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/hookboy/source/hookboy/conf"
+	_ "github.com/hookboy/source/hookboy/prep"
 )
 
 func TestThatHookStatementsGetInstalledProperly(t *testing.T) {
