@@ -23,3 +23,12 @@ func RegisterPrepper(p Prepper) {
 func GetPrepper() Prepper {
 	return registeredPrepper
 }
+
+type PrepError struct {
+	Description   string
+	InternalError error
+}
+
+func (pe PrepError) Error() string {
+	return pe.Description
+}

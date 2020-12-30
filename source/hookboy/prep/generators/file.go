@@ -1,4 +1,4 @@
-package prep
+package generators
 
 type fileToCreate struct {
 	path     string

@@ -6,6 +6,7 @@ import (
 
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
+	p "github.com/hookboy/source/hookboy/prep/internal"
 )
 
 var fileTemplateString = `#!/bin/sh
@@ -17,7 +18,7 @@ exit 1
 fi
 exit 0`
 
-func generateHookFileContents(ef []executableFile, c conf.Configuration) []internal.FileToCreate {
+func generateHookFileContents(ef []p.ExecutableFile, c conf.Configuration) []internal.FileToCreate {
 	var filesGroupByHook = groupByHook(ef)
 
 	var files = []internal.FileToCreate{}
@@ -41,7 +42,7 @@ func getHookFilePath(hookname string, c conf.Configuration) string {
 	return conf.ActualGitHooksDir + "/" + hookname
 }
 
-func generateHookFileContent(ef []executableFile) string {
+func generateHookFileContent(ef []p.ExecutableFile) string {
 	var linesToAdd = generateExecutableLines(ef)
 
 	var formattedLinesToAdd strings.Builder
@@ -68,7 +69,7 @@ func generateHookFileContent(ef []executableFile) string {
 	return withConditionalInserted
 }
 
-func generateExecutableLines(ef []executableFile) []string {
+func generateExecutableLines(ef []p.ExecutableFile) []string {
 	var execLines = []string{}
 	for _, f := range ef {
 		var line = generateLineFromFile(f)
@@ -79,7 +80,7 @@ func generateExecutableLines(ef []executableFile) []string {
 	return execLines
 }
 
-func generateLineFromFile(f executableFile) string {
+func generateLineFromFile(f p.ExecutableFile) string {
 	var sb strings.Builder
 
 	sb.WriteString("exec ")
@@ -92,8 +93,8 @@ func generateLineFromFile(f executableFile) string {
 	return sb.String()
 }
 
-func groupByHook(ef []executableFile) map[string][]executableFile {
-	var m = make(map[string][]executableFile)
+func groupByHook(ef []p.ExecutableFile) map[string][]p.ExecutableFile {
+	var m = make(map[string][]p.ExecutableFile)
 
 	for _, item := range ef {
 		var key = item.AssociatedHook
@@ -105,7 +106,7 @@ func groupByHook(ef []executableFile) map[string][]executableFile {
 			existingItems = append(existingItems, value)
 			m[key] = existingItems
 		} else {
-			m[key] = []executableFile{value}
+			m[key] = []p.ExecutableFile{value}
 		}
 	}
 

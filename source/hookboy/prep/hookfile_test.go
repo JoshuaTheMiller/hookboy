@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/hookboy/source/hookboy/conf"
+	p "github.com/hookboy/source/hookboy/prep/internal"
 )
 
 var fileAExpectedContents = `#!/bin/sh
@@ -20,8 +21,8 @@ fi
 exit 0`
 
 func TestGenerateHookFileContents(t *testing.T) {
-	ef := []executableFile{
-		executableFile{
+	ef := []p.ExecutableFile{
+		p.ExecutableFile{
 			AssociatedHook: "A",
 			Path:           "A_PATH_1",
 			ExtraArguments: []conf.ExtraArguments{
@@ -31,11 +32,11 @@ func TestGenerateHookFileContents(t *testing.T) {
 				},
 			},
 		},
-		executableFile{
+		p.ExecutableFile{
 			AssociatedHook: "A",
 			Path:           "A_PATH_2",
 		},
-		executableFile{
+		p.ExecutableFile{
 			AssociatedHook: "B",
 			Path:           "B_PATH_2",
 		},

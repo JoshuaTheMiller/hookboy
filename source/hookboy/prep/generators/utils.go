@@ -1,4 +1,4 @@
-package prep
+package generators
 
 import "reflect"
 
