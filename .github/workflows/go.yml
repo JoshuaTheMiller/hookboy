@@ -11,13 +11,12 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - uses: nelonoel/branch-name@v1.0.1
     - id: set-matrix
-      run: |
-        branchName=$(echo '${{ github.ref }}' | sed 's,refs/heads/,,g')  
-        matrix=$(jq --arg branchName "$branchName" 'map(. | select((.runOn==$branchName) or (.runOn=="always")) )' .github/workflows/matrix_includes.json)                
-        echo ::set-output name=matrix::{\"include\":$(echo $matrix)}\"
+      uses: JoshuaTheMiller/conditional-build-matrix@0.0.1
+      with:
+        filter: '[?runOnBranch==`${{ env.BRANCH_NAME }}` || runOnBranch==`always`]'
   build:
     needs: matrix_prep
     strategy:      

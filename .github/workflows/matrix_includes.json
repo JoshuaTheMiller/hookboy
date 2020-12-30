@@ -1,14 +1,14 @@
 [
     {
         "runs_on":"ubuntu-latest",        
-        "runOn":"always"
+        "runOnBranch":"always"
     },
     {
         "runs_on":"windows-latest",        
-        "runOn":"main"
+        "runOnBranch":"main"
     },
     {
         "runs_on":"macos-11.0",        
-        "runOn":"main"
+        "runOnBranch":"main"
     }
 ]
