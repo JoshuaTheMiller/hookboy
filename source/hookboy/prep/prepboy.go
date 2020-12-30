@@ -29,10 +29,6 @@ func (pb prepboy) PrepareHookfileInfo(c conf.Configuration) (ftc []internal.File
 	return ftc, nil
 }
 
-func statementIsPresent(s string) bool {
-	return s != ""
-}
-
 type prepboy struct {
 	Instantiated bool
 	ReadDir      func(dirname string) ([]p.SimpleFile, error)
