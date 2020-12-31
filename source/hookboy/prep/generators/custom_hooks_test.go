@@ -75,3 +75,28 @@ func Test_CustomHook_Generate_ReturnsAsExpected(t *testing.T) {
 		t.Errorf("Expected Contents to be %s, received '%s'", expectedContents, actualContents)
 	}
 }
+
+func Test_CustomHook_Generate_NonLocalFileReturnsError(t *testing.T) {
+	l := customHookGenerator{}
+
+	c := conf.Configuration{
+		AutoAddHooks: conf.No,
+		Hooks: []conf.Hooks{
+			conf.Hooks{
+				HookName: "commit-msg",
+				Files: []conf.HookFile{
+					conf.HookFile{
+						Path: "https://example.com/some_file.go",
+					},
+				},
+			},
+		},
+	}
+
+	_, _, err := l.Generate(c, nil)
+
+	if err != nonLocalFileError {
+		t.Error("Expected error")
+		return
+	}
+}
