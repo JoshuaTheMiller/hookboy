@@ -24,7 +24,7 @@ func main() {
 	builder := hookboy.GetBuilder()
 
 	if err := cli.RunApp(os.Args, os.Stdout, builder); err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		fmt.Fprintf(os.Stderr, "Hookboy Error :(\n| ==> %s\n", err)
 		os.Exit(exitFail)
 	}
 }

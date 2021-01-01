@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/hookboy/source/hookboy/conf"
+	"github.com/hookboy/source/hookboy/internal"
 )
 
 func Test_nonlocal_Name_IsSetAsExpected(t *testing.T) {
@@ -98,5 +99,35 @@ func Test_nonlocal_Prepare_OnlyLocalFilesReturnsEmptyArrays(t *testing.T) {
 	actualFtcLength := len(ftc)
 	if expectedFtcLength != actualFtcLength {
 		t.Error("Expected no files as no statement is present")
+	}
+}
+
+func Test_nonlocal_Prepare_ProgagatesPrepError(t *testing.T) {
+	nl := nonlocal{}
+
+	c := conf.Configuration{}
+	unresolveableUrl := "https://example.123faketld/some_file.go"
+	hooks := conf.Hooks{
+		HookName: "commit-msg",
+		Files: []conf.HookFile{
+			conf.HookFile{
+				Path: unresolveableUrl,
+			},
+		},
+	}
+
+	_, _, err := nl.Prepare(hooks, c)
+
+	prepError, ok := err.(internal.PrepError)
+
+	if !ok {
+		t.Error("Expected error to be PrepError")
+		return
+	}
+
+	expectedErrorMessage := fmt.Sprintf("Failed to retrieve non-local file. Please validate that you have access to the file, and that the configured URL is correct: %s", unresolveableUrl)
+	actualErrorMessage := prepError.Error()
+	if expectedErrorMessage != actualErrorMessage {
+		t.Error("Error message not as expected")
 	}
 }

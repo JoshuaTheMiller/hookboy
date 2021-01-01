@@ -41,7 +41,11 @@ func (ab applierboy) Install(configuration conf.Configuration) (string, error) {
 
 	var prepboy = internal.GetPrepper()
 
-	var filesToCreate, _ = prepboy.PrepareHookfileInfo(configuration)
+	var filesToCreate, err = prepboy.PrepareHookfileInfo(configuration)
+
+	if err != nil {
+		return "", err
+	}
 
 	return writeFiles(ab.WriteFile, filesToCreate)
 }

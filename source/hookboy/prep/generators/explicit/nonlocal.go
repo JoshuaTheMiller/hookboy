@@ -34,7 +34,11 @@ func (nl nonlocal) Prepare(h conf.Hooks, c conf.Configuration) (ef []p.Executabl
 		var contents, err = nl.HTTPGetter.Get(path)
 
 		if err != nil {
-			return nil, nil, err
+			var fileError = fmt.Sprintf("Failed to retrieve non-local file. Please validate that you have access to the file, and that the configured URL is correct: %s", path)
+			return nil, nil, internal.PrepError{
+				Description:   fileError,
+				InternalError: err,
+			}
 		}
 
 		var localPath = generateLocalPath(path, c, index)
