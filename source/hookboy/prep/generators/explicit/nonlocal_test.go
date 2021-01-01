@@ -1,6 +1,7 @@
 package explicit
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hookboy/source/hookboy/conf"
@@ -19,10 +20,13 @@ func Test_nonlocal_Name_IsSetAsExpected(t *testing.T) {
 	}
 }
 
-func Test_CustomHook_Generate_NonLocalFileReturnsError(t *testing.T) {
+func Test_CustomHook_Generate_NonLocalFileReturnsExpectedNonLocalFile(t *testing.T) {
 	nl := nonlocal{}
 
-	c := conf.Configuration{}
+	cachDir := "somecachedir"
+	c := conf.Configuration{
+		CacheDirectory: cachDir,
+	}
 	hooks := conf.Hooks{
 		HookName: "commit-msg",
 		Files: []conf.HookFile{
@@ -32,11 +36,32 @@ func Test_CustomHook_Generate_NonLocalFileReturnsError(t *testing.T) {
 		},
 	}
 
-	_, _, err := nl.Prepare(hooks, c)
+	ef, ftc, err := nl.Prepare(hooks, c)
 
-	if err != nonLocalFileError {
-		t.Error("Expected error")
+	if err != nil {
+		t.Error("Expected error to be nil")
 		return
+	}
+
+	expectedEfLength := 1
+	actualEfLength := len(ef)
+	if expectedEfLength != actualEfLength {
+		t.Error("Expected a file as one file was set")
+	}
+
+	var pathToDownloadTo = fmt.Sprintf("%s/.hookboy-cache/example-0", cachDir)
+	if ef[0].Path != pathToDownloadTo {
+		t.Error("File name is not as expected")
+	}
+
+	expectedFtcLength := 1
+	actualFtcLength := len(ftc)
+	if expectedFtcLength != actualFtcLength {
+		t.Error("Expected a file as one file was set")
+	}
+
+	if ftc[0].Path != pathToDownloadTo {
+		t.Error("File name is not as expected")
 	}
 }
 
