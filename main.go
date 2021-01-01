@@ -11,6 +11,7 @@ import (
 	_ "github.com/hookboy/source/hookboy/conf/source"
 	_ "github.com/hookboy/source/hookboy/prep"
 	_ "github.com/hookboy/source/hookboy/prep/generators"
+	_ "github.com/hookboy/source/hookboy/prep/generators/explicit"
 )
 
 const (

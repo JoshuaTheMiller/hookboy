@@ -1,9 +1,13 @@
 package generators
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/hookboy/source/hookboy/conf"
+	"github.com/hookboy/source/hookboy/internal"
+	_ "github.com/hookboy/source/hookboy/prep/generators/explicit"
+	p "github.com/hookboy/source/hookboy/prep/internal"
 )
 
 func Test_CustomHook_Name_ReturnsNameAsExpected(t *testing.T) {
@@ -16,6 +20,39 @@ func Test_CustomHook_Name_ReturnsNameAsExpected(t *testing.T) {
 
 	if expectedName != actualName {
 		t.Error("Name was not as expected")
+	}
+}
+
+func Test_explicitHooks_Generate_PropagatesError(t *testing.T) {
+	var errorToPropagate = errors.New("some error")
+
+	c := conf.Configuration{
+		Hooks: []conf.Hooks{
+			conf.Hooks{
+				HookName:  "commit-msg",
+				Statement: "doesn't matter",
+			},
+		},
+	}
+	l := customHookGenerator{
+		initialized: true,
+		preparer: testPreparer{
+			Error: errorToPropagate,
+		},
+	}
+
+	ef, ftc, err := l.Generate(c, nil)
+
+	if err != errorToPropagate {
+		t.Error("Expected error to be propgated")
+	}
+
+	if ef != nil {
+		t.Error("Expected ExecutableFiles array to be nil")
+	}
+
+	if ftc != nil {
+		t.Error("Expected FilesToCreate array to be nil")
 	}
 }
 
@@ -76,27 +113,14 @@ func Test_CustomHook_Generate_ReturnsAsExpected(t *testing.T) {
 	}
 }
 
-func Test_CustomHook_Generate_NonLocalFileReturnsError(t *testing.T) {
-	l := customHookGenerator{}
+type testPreparer struct {
+	Error error
+}
 
-	c := conf.Configuration{
-		AutoAddHooks: conf.No,
-		Hooks: []conf.Hooks{
-			conf.Hooks{
-				HookName: "commit-msg",
-				Files: []conf.HookFile{
-					conf.HookFile{
-						Path: "https://example.com/some_file.go",
-					},
-				},
-			},
-		},
-	}
+func (t testPreparer) Name() string {
+	return "test"
+}
 
-	_, _, err := l.Generate(c, nil)
-
-	if err != nonLocalFileError {
-		t.Error("Expected error")
-		return
-	}
+func (t testPreparer) Prepare(conf.Hooks, conf.Configuration) ([]p.ExecutableFile, []internal.FileToCreate, error) {
+	return nil, nil, t.Error
 }

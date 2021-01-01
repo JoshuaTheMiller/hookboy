@@ -10,6 +10,7 @@ import (
 	"github.com/hookboy/source/hookboy/conf"
 	_ "github.com/hookboy/source/hookboy/prep"
 	_ "github.com/hookboy/source/hookboy/prep/generators"
+	_ "github.com/hookboy/source/hookboy/prep/generators/explicit"
 )
 
 func TestThatHookStatementsGetInstalledProperly(t *testing.T) {

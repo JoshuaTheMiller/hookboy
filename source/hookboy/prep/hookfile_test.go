@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/hookboy/source/hookboy/conf"
+	_ "github.com/hookboy/source/hookboy/prep/generators/explicit"
 	p "github.com/hookboy/source/hookboy/prep/internal"
 )
 
