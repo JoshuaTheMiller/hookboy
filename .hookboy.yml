@@ -9,3 +9,4 @@ hooks:
         extraArguments:
           - name: FilePath
             value: ./hooks/CommitMessageTags.json
+      - path: https://gist.githubusercontent.com/JoshuaTheMiller/0c50c03cc30212f5939c08382bdf0bc0/raw/b6fe09512cf491d00c0d0b6bdb779176d38a3601/GreatJob.js
