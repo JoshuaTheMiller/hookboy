@@ -3,6 +3,7 @@ package aply
 import (
 	"io/ioutil"
 	"os"
+	"path"
 
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
@@ -13,6 +14,17 @@ type applierboy struct {
 }
 
 func writeFile(filename string, content string) error {
+	var dir = path.Dir(filename)
+
+	var error = os.MkdirAll(dir, os.ModePerm)
+
+	if error != nil {
+		return internal.AplyError{
+			Description:   "Problem creating new folder for file",
+			InternalError: error,
+		}
+	}
+
 	return ioutil.WriteFile(filename, []byte(content), os.ModePerm)
 }
 
