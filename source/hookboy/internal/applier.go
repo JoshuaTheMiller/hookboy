@@ -4,7 +4,7 @@ import "github.com/hookboy/source/hookboy/conf"
 
 // Applier configures hooks
 type Applier interface {
-	Install(configuration conf.Configuration) (string, error)
+	Install(conf.Configuration, []FileToCreate) (string, error)
 }
 
 var registeredApplier Applier

@@ -29,7 +29,16 @@ type hookboyTheAppliction struct {
 }
 
 func (hb *hookboyTheAppliction) Install() (string, error) {
-	return hb.Applier.Install(hb.Configuration)
+
+	var prepboy = internal.GetPrepper()
+
+	var filesToCreate, err = prepboy.PrepareHookfileInfo(hb.Configuration)
+
+	if err != nil {
+		return "", err
+	}
+
+	return hb.Applier.Install(hb.Configuration, filesToCreate)
 }
 
 func (hb *hookboyTheAppliction) CurrentConfiguration() (conf.Configuration, error) {

@@ -33,21 +33,10 @@ func (ab *applierboy) instantiate() {
 }
 
 // Install installs the hooks with the given configuration
-func (ab applierboy) Install(configuration conf.Configuration) (string, error) {
-	// TODO: should most likely accept files to create as a parameter, thus eliminating another
-	// dependency here.
-	// FileToCreate should be moved to an internal package as well (same with many of these interfaces)
+func (ab applierboy) Install(configuration conf.Configuration, ftc []internal.FileToCreate) (string, error) {
 	ab.instantiate()
 
-	var prepboy = internal.GetPrepper()
-
-	var filesToCreate, err = prepboy.PrepareHookfileInfo(configuration)
-
-	if err != nil {
-		return "", err
-	}
-
-	return writeFiles(ab.WriteFile, filesToCreate)
+	return writeFiles(ab.WriteFile, ftc)
 }
 
 func writeFiles(writeFile func(filename string, content string) error, filesToCreate []internal.FileToCreate) (string, error) {
