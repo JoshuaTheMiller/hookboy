@@ -5,7 +5,7 @@
 hooks:
   - hookName: commit-msg
     files:
-      - path: ./hooks/CommitMustContainValidTags.js
+      - path: https://example.123faketld/some_file.go
         extraArguments:
           - name: FilePath
             value: ./hooks/CommitMessageTags.json

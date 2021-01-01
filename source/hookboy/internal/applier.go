@@ -20,3 +20,13 @@ func RegisterApplier(a Applier) {
 func GetApplier() Applier {
 	return registeredApplier
 }
+
+// An AplyError is an error generated during the Apply stage
+type AplyError struct {
+	Description   string
+	InternalError error
+}
+
+func (ae AplyError) Error() string {
+	return ae.Description
+}
