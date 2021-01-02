@@ -10,6 +10,15 @@ import (
 )
 
 var fileTemplateString = `#!/bin/sh
+
+if [ -z "${hookboy_skip}" ] && [ ${hookboy_skip} = "true" ]
+then
+LGray='\x1b[41m'
+NC='\x1b[0m'
+echo -e "${LGray}Environment Variable 'hookboy_skip' is set, skipping hook validation!${NC}"
+exit 0
+fi
+
 insertLinesHere
 
 if insertConditionalHere;
