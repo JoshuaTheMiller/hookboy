@@ -1,6 +1,7 @@
 package explicit
 
 import (
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 	p "github.com/hookboy/source/hookboy/prep/internal"
@@ -13,7 +14,7 @@ func (s statement) Name() string {
 	return "statement"
 }
 
-func (s statement) Prepare(h conf.Hooks, c conf.Configuration) ([]p.ExecutableFile, []internal.FileToCreate, error) {
+func (s statement) Prepare(h conf.Hooks, c conf.Configuration) ([]p.ExecutableFile, []internal.FileToCreate, hookboy.Error) {
 	if !statementIsPresent(h.Statement) {
 		return []p.ExecutableFile{}, []internal.FileToCreate{}, nil
 	}

@@ -1,9 +1,9 @@
 package generators
 
 import (
-	"errors"
 	"testing"
 
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 	_ "github.com/hookboy/source/hookboy/prep/generators/explicit"
@@ -24,7 +24,7 @@ func Test_CustomHook_Name_ReturnsNameAsExpected(t *testing.T) {
 }
 
 func Test_explicitHooks_Generate_PropagatesError(t *testing.T) {
-	var errorToPropagate = errors.New("some error")
+	var errorToPropagate = hookboy.NewError("some error")
 
 	c := conf.Configuration{
 		Hooks: []conf.Hooks{
@@ -114,13 +114,13 @@ func Test_CustomHook_Generate_ReturnsAsExpected(t *testing.T) {
 }
 
 type testPreparer struct {
-	Error error
+	Error hookboy.Error
 }
 
 func (t testPreparer) Name() string {
 	return "test"
 }
 
-func (t testPreparer) Prepare(conf.Hooks, conf.Configuration) ([]p.ExecutableFile, []internal.FileToCreate, error) {
+func (t testPreparer) Prepare(conf.Hooks, conf.Configuration) ([]p.ExecutableFile, []internal.FileToCreate, hookboy.Error) {
 	return nil, nil, t.Error
 }

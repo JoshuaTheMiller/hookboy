@@ -1,8 +1,9 @@
-package hookboy
+package app
 
 import (
 	"fmt"
 
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 )
@@ -11,15 +12,15 @@ import (
 // tool. Typically returned by Builder
 type Application interface {
 	// Rename to Wrangle and Wrangler
-	Install() (string, error)
-	CurrentConfiguration() (conf.Configuration, error)
-	ConfigurationLocation() (string, error)
+	Install() (string, hookboy.Error)
+	CurrentConfiguration() (conf.Configuration, hookboy.Error)
+	ConfigurationLocation() (string, hookboy.Error)
 }
 
 // Builder implementations construct services that adhere to the Application
 // interface
 type Builder interface {
-	Construct() (Application, error)
+	Construct() (Application, hookboy.Error)
 }
 
 type hookboyTheAppliction struct {
@@ -28,7 +29,7 @@ type hookboyTheAppliction struct {
 	CE            internal.ConfigurationExposer
 }
 
-func (hb *hookboyTheAppliction) Install() (string, error) {
+func (hb *hookboyTheAppliction) Install() (string, hookboy.Error) {
 
 	var prepboy = internal.GetPrepper()
 
@@ -41,11 +42,11 @@ func (hb *hookboyTheAppliction) Install() (string, error) {
 	return hb.Applier.Install(hb.Configuration, filesToCreate)
 }
 
-func (hb *hookboyTheAppliction) CurrentConfiguration() (conf.Configuration, error) {
+func (hb *hookboyTheAppliction) CurrentConfiguration() (conf.Configuration, hookboy.Error) {
 	return hb.Configuration, nil
 }
 
-func (hb *hookboyTheAppliction) ConfigurationLocation() (string, error) {
+func (hb *hookboyTheAppliction) ConfigurationLocation() (string, hookboy.Error) {
 	var source, err = hb.CE.LocateCurrentConfigurationSource()
 	var message = fmt.Sprintf("| Configuration Source\n|--> Source: %s\n|--> Description: %s", source.Path, source.Description)
 	return message, err
@@ -54,7 +55,7 @@ func (hb *hookboyTheAppliction) ConfigurationLocation() (string, error) {
 type bob struct {
 }
 
-func (b *bob) Construct() (Application, error) {
+func (b *bob) Construct() (Application, hookboy.Error) {
 	ce := internal.GetConfigurationExposer()
 
 	configuration, err := ce.RetrieveCurrentConfiguration()

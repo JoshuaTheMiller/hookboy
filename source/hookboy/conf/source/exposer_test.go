@@ -2,8 +2,6 @@ package source
 
 import (
 	"testing"
-
-	"github.com/hookboy/source/hookboy/internal"
 )
 
 func TestGetCurrentConfigurationSourceReturnsNoneWhenNoConfigurationIsPresent(t *testing.T) {
@@ -14,10 +12,6 @@ func TestGetCurrentConfigurationSourceReturnsNoneWhenNoConfigurationIsPresent(t 
 	if err == nil {
 		t.Error("Expected error to be returned, none was")
 		return
-	}
-
-	if err != internal.NoConfigurationSourceFoundError {
-		t.Errorf("Expected err to be 'NoConfigurationSourceFoundError, was: %s", err)
 	}
 }
 

@@ -1,6 +1,9 @@
 package internal
 
-import "github.com/hookboy/source/hookboy/conf"
+import (
+	"github.com/hookboy/source/hookboy"
+	"github.com/hookboy/source/hookboy/conf"
+)
 
 var registeredConfigurationExposer ConfigurationExposer
 
@@ -17,27 +20,12 @@ func GetConfigurationExposer() ConfigurationExposer {
 
 // ConfigurationExposer exposes functions to help gleem more information about configuration
 type ConfigurationExposer interface {
-	LocateCurrentConfigurationSource() (CurrentConfigurationSource, error)
-	RetrieveCurrentConfiguration() (conf.Configuration, error)
-}
-
-// NoConfigurationSourceFoundError returned when no source of configuration can be found.
-var NoConfigurationSourceFoundError = ConfigurationSourceError{
-	Description: "No source of configuration found.",
+	LocateCurrentConfigurationSource() (CurrentConfigurationSource, hookboy.Error)
+	RetrieveCurrentConfiguration() (conf.Configuration, hookboy.Error)
 }
 
 // CurrentConfigurationSource is returned from the ./LocateCurrentConfigurationSource function
 type CurrentConfigurationSource struct {
 	Path        string
 	Description string
-}
-
-// ConfigurationSourceError is the generic error that is returned if there is any form of configuration
-// errors
-type ConfigurationSourceError struct {
-	Description string
-}
-
-func (e ConfigurationSourceError) Error() string {
-	return e.Description
 }

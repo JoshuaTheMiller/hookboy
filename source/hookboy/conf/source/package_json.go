@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
-	"github.com/hookboy/source/hookboy/internal"
 )
 
 const packageJSONName = "package.json"
@@ -47,23 +47,19 @@ func (l packageJSONFileReader) CanRead() bool {
 	return false
 }
 
-func (l packageJSONFileReader) Read() (conf.Configuration, error) {
+func (l packageJSONFileReader) Read() (conf.Configuration, hookboy.Error) {
 
 	var packageJSONPath = packageJSONName
 
 	result := checkForFileSystemObject(packageJSONPath)
 
 	if result == doesNotExist || result == folder {
-		return conf.Configuration{}, internal.ConfigurationSourceError{
-			Description: "Error reading package.json",
-		}
+		return conf.Configuration{}, hookboy.NewError("Error reading package.json")
 	}
 
 	data, err := ioutil.ReadFile(packageJSONPath)
 	if err != nil {
-		return conf.Configuration{}, internal.ConfigurationSourceError{
-			Description: "Error reading package.json",
-		}
+		return conf.Configuration{}, hookboy.NewError("Error reading package.json")
 	}
 
 	type packageJSON struct {
@@ -75,18 +71,14 @@ func (l packageJSONFileReader) Read() (conf.Configuration, error) {
 	err = json.Unmarshal(data, &obj)
 
 	if err != nil {
-		return conf.Configuration{}, internal.ConfigurationSourceError{
-			Description: "Error reading package.json",
-		}
+		return conf.Configuration{}, hookboy.NewError("Error reading package.json")
 	}
 
 	if obj.Hookboy != nil {
 		return *obj.Hookboy, nil
 	}
 
-	return conf.Configuration{}, internal.ConfigurationSourceError{
-		Description: "Error reading package.json",
-	}
+	return conf.Configuration{}, hookboy.NewError("Error reading package.json")
 }
 
 func (l packageJSONFileReader) Description() string {

@@ -1,6 +1,7 @@
 package generators
 
 import (
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 	g "github.com/hookboy/source/hookboy/prep/generators/internal"
@@ -12,7 +13,7 @@ type customHookGenerator struct {
 	preparer    g.ExplicitHookPreparer
 }
 
-func (chg customHookGenerator) Generate(c conf.Configuration, readDir func(dirname string) ([]p.SimpleFile, error)) (ef []p.ExecutableFile, ftc []internal.FileToCreate, err error) {
+func (chg customHookGenerator) Generate(c conf.Configuration, readDir func(dirname string) ([]p.SimpleFile, hookboy.Error)) (ef []p.ExecutableFile, ftc []internal.FileToCreate, err hookboy.Error) {
 	chg.initialize()
 	var preparer = chg.preparer
 

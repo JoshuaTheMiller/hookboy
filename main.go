@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/hookboy/source/cli"
-	"github.com/hookboy/source/hookboy"
 
 	_ "github.com/hookboy/source/hookboy/aply"
+	"github.com/hookboy/source/hookboy/app"
 	_ "github.com/hookboy/source/hookboy/conf/source"
 	_ "github.com/hookboy/source/hookboy/prep"
 	_ "github.com/hookboy/source/hookboy/prep/generators"
@@ -21,7 +21,7 @@ const (
 )
 
 func main() {
-	builder := hookboy.GetBuilder()
+	builder := app.GetBuilder()
 
 	if err := cli.RunApp(os.Args, os.Stdout, builder); err != nil {
 		fmt.Fprintf(os.Stderr, "Hookboy Error :(\n| ==> %s\n", err)

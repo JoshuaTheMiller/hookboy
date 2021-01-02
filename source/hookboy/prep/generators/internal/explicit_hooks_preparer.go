@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 	p "github.com/hookboy/source/hookboy/prep/internal"
@@ -11,7 +12,7 @@ import (
 // An ExplicitHookPreparer is used to generate files for hooks that are explicitly defined
 type ExplicitHookPreparer interface {
 	Name() string
-	Prepare(conf.Hooks, conf.Configuration) ([]p.ExecutableFile, []internal.FileToCreate, error)
+	Prepare(conf.Hooks, conf.Configuration) ([]p.ExecutableFile, []internal.FileToCreate, hookboy.Error)
 }
 
 // Register registers an additional ExplicitHookPreparer.
@@ -45,7 +46,7 @@ func (cehp compositeExplicitHookPreparer) Name() string {
 	return "composite"
 }
 
-func (cehp compositeExplicitHookPreparer) Prepare(h conf.Hooks, c conf.Configuration) (ef []p.ExecutableFile, ftc []internal.FileToCreate, e error) {
+func (cehp compositeExplicitHookPreparer) Prepare(h conf.Hooks, c conf.Configuration) (ef []p.ExecutableFile, ftc []internal.FileToCreate, e hookboy.Error) {
 	for _, p := range preparers {
 		var executableFiles, filesToCreate, err = p.Prepare(h, c)
 

@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 	"github.com/hookboy/source/hookboy/internal/util"
@@ -20,7 +21,7 @@ func (nl nonlocal) Name() string {
 	return "nonlocal"
 }
 
-func (nl nonlocal) Prepare(h conf.Hooks, c conf.Configuration) (ef []p.ExecutableFile, ftc []internal.FileToCreate, e error) {
+func (nl nonlocal) Prepare(h conf.Hooks, c conf.Configuration) (ef []p.ExecutableFile, ftc []internal.FileToCreate, e hookboy.Error) {
 	nl.initialize()
 
 	for index, fileToInclude := range h.Files {
@@ -35,10 +36,7 @@ func (nl nonlocal) Prepare(h conf.Hooks, c conf.Configuration) (ef []p.Executabl
 
 		if err != nil {
 			var fileError = fmt.Sprintf("Failed to retrieve non-local file. Please validate that you have access to the file, and that the configured URL is correct: %s", path)
-			return nil, nil, internal.PrepError{
-				Description:   fileError,
-				InternalError: err,
-			}
+			return nil, nil, hookboy.WrapError(err, fileError)
 		}
 
 		var localPath = generateLocalPath(path, c, index)
@@ -74,8 +72,4 @@ func (nl *nonlocal) initialize() {
 		nl.Initialized = true
 		nl.HTTPGetter = util.DefaultHTTPGetter()
 	}
-}
-
-var nonLocalFileError = internal.PrepError{
-	Description: "Non-local files are not yet supported!",
 }

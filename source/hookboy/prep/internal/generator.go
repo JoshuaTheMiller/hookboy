@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 )
@@ -23,7 +24,7 @@ type FileGenerator interface {
 	Name() string
 	// Generate When called, will generate files if the specific generator deems it appropriate
 	// based on the configuration
-	Generate(conf.Configuration, func(dirname string) ([]SimpleFile, error)) ([]ExecutableFile, []internal.FileToCreate, error)
+	Generate(conf.Configuration, func(dirname string) ([]SimpleFile, hookboy.Error)) ([]ExecutableFile, []internal.FileToCreate, hookboy.Error)
 }
 
 type generatorComposer struct{}
@@ -32,7 +33,7 @@ func (gc generatorComposer) Name() string {
 	return "Composer"
 }
 
-func (gc generatorComposer) Generate(c conf.Configuration, readDir func(dirname string) ([]SimpleFile, error)) ([]ExecutableFile, []internal.FileToCreate, error) {
+func (gc generatorComposer) Generate(c conf.Configuration, readDir func(dirname string) ([]SimpleFile, hookboy.Error)) ([]ExecutableFile, []internal.FileToCreate, hookboy.Error) {
 	var ef = []ExecutableFile{}
 	var ftc = []internal.FileToCreate{}
 

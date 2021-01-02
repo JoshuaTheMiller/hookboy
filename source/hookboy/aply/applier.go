@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 )
@@ -19,7 +20,7 @@ type applierboy struct {
 }
 
 // Install installs the hooks with the given configuration
-func (ab applierboy) Install(configuration conf.Configuration, ftc []internal.FileToCreate) (string, error) {
+func (ab applierboy) Install(configuration conf.Configuration, ftc []internal.FileToCreate) (string, hookboy.Error) {
 	ab.instantiate()
 
 	for _, ftc := range ftc {
@@ -31,19 +32,13 @@ func (ab applierboy) Install(configuration conf.Configuration, ftc []internal.Fi
 		err := ab.createFolder(dir, os.ModePerm)
 
 		if err != nil {
-			return "", internal.AplyError{
-				Description:   "Problem creating new folder for file",
-				InternalError: err,
-			}
+			return "", hookboy.WrapError(err, "Problem creating new folder for file")
 		}
 
 		err = ab.writeFile(fullFileName, []byte(content), os.ModePerm)
 
 		if err != nil {
-			return "", internal.AplyError{
-				Description:   "Problem creating file",
-				InternalError: err,
-			}
+			return "", hookboy.WrapError(err, "Problem creating file")
 		}
 	}
 

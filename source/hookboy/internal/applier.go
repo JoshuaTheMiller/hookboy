@@ -1,10 +1,13 @@
 package internal
 
-import "github.com/hookboy/source/hookboy/conf"
+import (
+	"github.com/hookboy/source/hookboy"
+	"github.com/hookboy/source/hookboy/conf"
+)
 
 // Applier configures hooks
 type Applier interface {
-	Install(conf.Configuration, []FileToCreate) (string, error)
+	Install(conf.Configuration, []FileToCreate) (string, hookboy.Error)
 }
 
 var registeredApplier Applier
@@ -19,14 +22,4 @@ func RegisterApplier(a Applier) {
 // RegisterApplier
 func GetApplier() Applier {
 	return registeredApplier
-}
-
-// An AplyError is an error generated during the Apply stage
-type AplyError struct {
-	Description   string
-	InternalError error
-}
-
-func (ae AplyError) Error() string {
-	return ae.Description
 }
