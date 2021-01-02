@@ -1,24 +1,24 @@
 <div align="center">
 
-# Grapple
+# Hookboy
 
-![An image of a hook, representing the end of a grappling hook](./docs/images/hook.svg)
+![The icon of this application, a cowboy robot with wrangling a hook](https://github.com/JoshuaTheMiller/assorted-resources/raw/main/hookboy/icon.png)
 
-[![Go](https://github.com/JoshuaTheMiller/Grapple/workflows/Go/badge.svg)](https://github.com/JoshuaTheMiller/Grapple/actions?query=workflow%3AGo) [![codecov](https://codecov.io/gh/JoshuaTheMiller/hookboy/branch/main/graph/badge.svg?token=EJ36OJYYF1)](https://codecov.io/gh/JoshuaTheMiller/hookboy)
+[![Go](https://github.com/JoshuaTheMiller/hookboy/workflows/Go/badge.svg)](https://github.com/JoshuaTheMiller/hookboy/actions?query=workflow%3AGo) [![codecov](https://codecov.io/gh/JoshuaTheMiller/hookboy/branch/main/graph/badge.svg?token=EJ36OJYYF1)](https://codecov.io/gh/JoshuaTheMiller/hookboy)
 
 </div>
 
 ## Welcome!
 
-Similar to the ever popular [grappling hook](https://terraria.gamepedia.com/Hooks), Grapple is an essential tool for anyone looking to increase the mobility (i.e. shareability) of [Git Hooks](https://git-scm.com/docs/githooks). Additionally, it makes using them a ton easier!
+Similar to the cowboys of yesteryear, Hookboy is an essential tool for anyone looking to round up, wrangle, and transport (i.e. share) [Git Hooks](https://git-scm.com/docs/githooks). Additionally, it makes using them a ton easier!
 
-**Why should you care?** First and foremost, Git Hooks provide a way to automate your own workflows. Properly leveraging such automation provides [other benefits](#Benefits-of-Git-Hooks), such as forcing yourself to get better at commit messages, linting your source code upon commit, etc. Unfortunately, git does not offer a great out-of-box experience for maintaining, installing, and sharing Hooks. Grapple aims to provide this great experience!
+**Why should you care?** First and foremost, Git Hooks provide a way to automate your own workflows. Properly leveraging such automation provides [other benefits](#Benefits-of-Git-Hooks), such as forcing yourself to get better at commit messages, linting your source code upon commit, etc. Unfortunately, git does not offer a great out-of-box experience for maintaining, installing, and sharing Hooks. Hookboy aims to provide this great experience!
 
-## So... what actually is Grapple?
+## So... what actually is Hookboy?
 
-Currently, Grapple is a tiny command line tool that allows users to "install" Git Hooks, either from a local file, or from some file hosted out on the internet.
+Currently, Hookboy is a command line tool that allows users to "install" Git Hooks, either from a local file, or from some file hosted out on the internet.
 
-Under normal circumstances, to "Install" a Hook, one would have to navigate to the `.git/hooks` subdirectory of a repository, and modify/overwrite files there. This quickly gets tiresome with many files and many repositories, as Git does not natively offer an easy way to transfer Hooks around. A quick search around the internet will show you that there are other tools available today that offer a similar benefit to Grapple, and you should [check them out](#Other-Tools)! However, Grapple shines because of its small footprint, the drive to support any and all tech stacks (i.e. not just Javascript, Python, etc), and its stance towards user friendliness (i.e. be user friendly).
+Under normal circumstances, to "Install" a Hook, one would have to navigate to the `.git/hooks` subdirectory of a repository, and modify/overwrite files there. This quickly gets tiresome with many files and many repositories, as Git does not natively offer an easy way to transfer Hooks around. A quick search around the internet will show you that there are other tools available today that offer a similar benefit to Hookboy, and you should [check them out](#Other-Tools)! However, Hookboy shines because of its small footprint, the drive to support any and all tech stacks (i.e. not just Javascript, Python, etc), and its stance towards user friendliness (i.e. be user friendly).
 
 ## Benefits of Git Hooks
 
@@ -46,15 +46,6 @@ Under normal circumstances, to "Install" a Hook, one would have to navigate to t
 * prepare-commit-msg
 * update
 
-## Wants+Improvements
-
-- [ ] Have script add colons to **recognized** tags (less typing for me)
-- [ ] Support usage of files over HTTP
-  * Needs to support caching (.grapple-cache directory?)
-  * Needs to support setting of execution rights after downloading
-- [x] ~~Error handling in MyNameWillChange.sh~~
-- [x] ~~Rewrite CaptainHook.go as Bash?~~
-
 ## Other Tools
 
 * https://github.com/rycus86/githooks
@@ -64,3 +55,7 @@ Under normal circumstances, to "Install" a Hook, one would have to navigate to t
 * https://www.npmjs.com/package/node-hooks
 * https://pythonhosted.org/jig/
 * https://github.com/typicode/husky
+
+## Credit
+
+* Icon: [@odinolav](https://github.com/odinolav)

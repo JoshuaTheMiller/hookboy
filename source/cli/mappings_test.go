@@ -13,7 +13,7 @@ func TestCliIsMappedToApplicationCorrectly(t *testing.T) {
 	var commandMappingsToTest = map[string]commandMapTest{
 		"hello": commandMapTest{
 			ArgsToPass:     []string{"hello"},
-			ExpectedOutput: "Hello! We hope you are enjoying Grapple!",
+			ExpectedOutput: "Hello! Hookboy hopes that you are enjoying the better Git Hooks experience!",
 			Builder: builder{
 				TestApplication: testApplication{},
 			},

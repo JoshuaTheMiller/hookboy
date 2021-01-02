@@ -12,21 +12,21 @@ import (
 func RunApp(args []string, stdout io.Writer, ab app.Builder) error {
 	app := &cli.App{
 		Writer: stdout,
-		Name:   "Grapple",
+		Name:   "Hookboy",
 		Usage:  "Git Hooks made easy!",
 		Commands: []*cli.Command{
 			{
 				Name:  "hello",
 				Usage: "Says hello!",
 				Action: func(c *cli.Context) error {
-					var message = "Hello! We hope you are enjoying Grapple!"
+					var message = "Hello! Hookboy hopes that you are enjoying the better Git Hooks experience!"
 					_, err := stdout.Write([]byte(message))
 					return err
 				},
 			},
 			{
 				Name:  "install",
-				Usage: "Configures local Git Hooks to adhere to the '.grapple' configuration file",
+				Usage: "Configures local Git Hooks to adhere to the configuration file",
 				Action: func(c *cli.Context) error {
 					options := cliOptions{}
 
