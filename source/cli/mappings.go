@@ -3,8 +3,8 @@ package cli
 import (
 	"io"
 
-	"github.com/hookboy/source/boundary"
 	"github.com/hookboy/source/hookboy/app"
+	"github.com/hookboy/source/internal/boundary"
 	"github.com/urfave/cli/v2"
 )
 

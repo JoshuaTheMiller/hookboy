@@ -8,8 +8,8 @@ import (
 	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
-	"github.com/hookboy/source/hookboy/internal/util"
 	p "github.com/hookboy/source/hookboy/prep/internal"
+	"github.com/hookboy/source/internal/util"
 )
 
 type nonlocal struct {

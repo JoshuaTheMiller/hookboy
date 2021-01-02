@@ -8,15 +8,13 @@ import (
 	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
+	"github.com/hookboy/source/internal/boundary"
 )
-
-type fileWriter func(filename string, data []byte, perm os.FileMode) error
-type folderCreator func(path string, perm os.FileMode) error
 
 type applierboy struct {
 	instantiated bool
-	writeFile    fileWriter
-	createFolder folderCreator
+	writeFile    boundary.FileWriter
+	createFolder boundary.FolderCreator
 }
 
 // Install installs the hooks with the given configuration
