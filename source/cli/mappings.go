@@ -3,13 +3,13 @@ package cli
 import (
 	"io"
 
-	"github.com/hookboy/source/boundary"
-	"github.com/hookboy/source/hookboy"
+	"github.com/hookboy/source/hookboy/app"
+	"github.com/hookboy/source/internal/boundary"
 	"github.com/urfave/cli/v2"
 )
 
 // RunApp starts Hookboy
-func RunApp(args []string, stdout io.Writer, ab hookboy.Builder) error {
+func RunApp(args []string, stdout io.Writer, ab app.Builder) error {
 	app := &cli.App{
 		Writer: stdout,
 		Name:   "Grapple",
@@ -114,7 +114,7 @@ func RunApp(args []string, stdout io.Writer, ab hookboy.Builder) error {
 type cliOptions struct {
 }
 
-func retrieveApplication(options cliOptions, ab hookboy.Builder) (hookboy.Application, error) {
+func retrieveApplication(options cliOptions, ab app.Builder) (app.Application, error) {
 	application, err := ab.Construct()
 
 	return application, err

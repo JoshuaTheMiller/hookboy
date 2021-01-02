@@ -3,13 +3,14 @@ package prep
 import (
 	"io/ioutil"
 
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 
 	p "github.com/hookboy/source/hookboy/prep/internal"
 )
 
-func (pb prepboy) PrepareHookfileInfo(c conf.Configuration) (ftc []internal.FileToCreate, e error) {
+func (pb prepboy) PrepareHookfileInfo(c conf.Configuration) (ftc []internal.FileToCreate, e hookboy.Error) {
 	if pb.Instantiated != true {
 		pb.instantiate()
 	}
@@ -31,7 +32,7 @@ func (pb prepboy) PrepareHookfileInfo(c conf.Configuration) (ftc []internal.File
 
 type prepboy struct {
 	Instantiated bool
-	ReadDir      func(dirname string) ([]p.SimpleFile, error)
+	ReadDir      func(dirname string) ([]p.SimpleFile, hookboy.Error)
 }
 
 func (pb *prepboy) instantiate() {
@@ -39,8 +40,12 @@ func (pb *prepboy) instantiate() {
 	pb.Instantiated = true
 }
 
-func readDir(dir string) ([]p.SimpleFile, error) {
+func readDir(dir string) ([]p.SimpleFile, hookboy.Error) {
 	var files, err = ioutil.ReadDir(dir)
+
+	if err != nil {
+		return nil, hookboy.WrapError(err, "Failed to read directory!")
+	}
 
 	data := make([]p.SimpleFile, len(files))
 
@@ -48,5 +53,5 @@ func readDir(dir string) ([]p.SimpleFile, error) {
 		data[i] = p.SimpleFile(files[i])
 	}
 
-	return data, err
+	return data, nil
 }

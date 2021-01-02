@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
-	"github.com/hookboy/source/hookboy/internal"
 	_ "github.com/hookboy/source/hookboy/prep/generators"
 	p "github.com/hookboy/source/hookboy/prep/internal"
 )
@@ -77,14 +77,8 @@ func Test_PrepareHookfileInfo_PropgatesErrorWhenTryingToReadNonExistantFolder(t 
 		return
 	}
 
-	prepboyError, ok := err.(internal.PrepError)
-	if ok != true {
-		t.Error("Expected error to be prepboyError")
-		return
-	}
-
 	expectedDescription := "Error prepping hooks by filename"
-	if prepboyError.Error() != expectedDescription {
+	if err.Error() != expectedDescription {
 		t.Error("Expected description does not match actual")
 	}
 }
@@ -97,7 +91,7 @@ func Test_PrepareHookfileInfo_Prepares1FileWhenAutoAdding1File(t *testing.T) {
 		name: "commit-msg",
 	}
 	p := prepboy{
-		ReadDir: func(dirname string) ([]p.SimpleFile, error) {
+		ReadDir: func(dirname string) ([]p.SimpleFile, hookboy.Error) {
 			return []p.SimpleFile{
 				hookfileForTest,
 			}, nil

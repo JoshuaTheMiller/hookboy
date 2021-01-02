@@ -1,6 +1,7 @@
 package source
 
 import (
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 )
 
@@ -19,7 +20,7 @@ func (l localFolderReader) CanRead() bool {
 	return true
 }
 
-func (l localFolderReader) Read() (conf.Configuration, error) {
+func (l localFolderReader) Read() (conf.Configuration, hookboy.Error) {
 	var configurationToReturn conf.Configuration
 	configurationToReturn.AutoAddHooks = conf.ByFileName
 	configurationToReturn.LocalHookDir = l.Path

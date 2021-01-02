@@ -22,9 +22,9 @@ func Test_applier_InstallWritesFilesToFolderThatDidNotExistBefore(t *testing.T) 
 
 	var applier = applierboy{}
 
-	_, err := applier.Install(c, []internal.FileToCreate{ftc})
+	_, error := applier.Install(c, []internal.FileToCreate{ftc})
 
-	if err != nil {
+	if error != nil {
 		t.Error("Got error when none was expected")
 		return
 	}
@@ -71,15 +71,8 @@ func Test_applier_InstallPropagatesFileError(t *testing.T) {
 
 	_, err := applier.Install(c, []internal.FileToCreate{ftc})
 
-	aplyError, ok := err.(internal.AplyError)
-
-	if !ok {
-		t.Error("Expected error to be of type AplyError")
-		return
-	}
-
 	expectedMessage := "Problem creating file"
-	actualMessage := aplyError.Error()
+	actualMessage := err.Error()
 	if expectedMessage != actualMessage {
 		t.Error("AplyError does not have the correct error message")
 		return
@@ -104,15 +97,8 @@ func Test_applier_InstallPropagatesFolderError(t *testing.T) {
 
 	_, err := applier.Install(c, []internal.FileToCreate{ftc})
 
-	aplyError, ok := err.(internal.AplyError)
-
-	if !ok {
-		t.Error("Expected error to be of type AplyError")
-		return
-	}
-
 	expectedMessage := "Problem creating new folder for file"
-	actualMessage := aplyError.Error()
+	actualMessage := err.Error()
 	if expectedMessage != actualMessage {
 		t.Error("AplyError does not have the correct error message")
 		return

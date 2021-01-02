@@ -2,10 +2,10 @@ package cli
 
 import (
 	"bytes"
-	"errors"
 	"testing"
 
 	"github.com/hookboy/source/hookboy"
+	"github.com/hookboy/source/hookboy/app"
 	"github.com/hookboy/source/hookboy/conf"
 )
 
@@ -32,7 +32,7 @@ func TestCliIsMappedToApplicationCorrectly(t *testing.T) {
 			ExpectedOutput: "Installing failed",
 			Builder: builder{
 				TestApplication: testApplication{
-					Error: errors.New("Installing failed"),
+					Error: hookboy.NewError("Installing failed"),
 				},
 			},
 			IsErrorTest: true,
@@ -41,7 +41,7 @@ func TestCliIsMappedToApplicationCorrectly(t *testing.T) {
 			ArgsToPass:     []string{"install"},
 			ExpectedOutput: "Building failed",
 			Builder: builder{
-				Error: errors.New("Building failed"),
+				Error: hookboy.NewError("Building failed"),
 			},
 			IsErrorTest: true,
 		},
@@ -102,10 +102,10 @@ type commandMapTest struct {
 
 type builder struct {
 	TestApplication testApplication
-	Error           error
+	Error           hookboy.Error
 }
 
-func (b *builder) Construct() (hookboy.Application, error) {
+func (b *builder) Construct() (app.Application, hookboy.Error) {
 	if b.Error != nil {
 		return nil, b.Error
 	}
@@ -115,12 +115,12 @@ func (b *builder) Construct() (hookboy.Application, error) {
 
 type testApplication struct {
 	InstallMessage string
-	Error          error
+	Error          hookboy.Error
 	ConfigLocation string
 	Config         conf.Configuration
 }
 
-func (ta *testApplication) Install() (string, error) {
+func (ta *testApplication) Install() (string, hookboy.Error) {
 	if ta.Error != nil {
 		return "", ta.Error
 	}
@@ -128,10 +128,10 @@ func (ta *testApplication) Install() (string, error) {
 	return ta.InstallMessage, nil
 }
 
-func (ta *testApplication) CurrentConfiguration() (conf.Configuration, error) {
+func (ta *testApplication) CurrentConfiguration() (conf.Configuration, hookboy.Error) {
 	return ta.Config, ta.Error
 }
 
-func (ta *testApplication) ConfigurationLocation() (string, error) {
+func (ta *testApplication) ConfigurationLocation() (string, hookboy.Error) {
 	return ta.ConfigLocation, ta.Error
 }

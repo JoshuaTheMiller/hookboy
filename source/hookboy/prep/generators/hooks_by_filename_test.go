@@ -1,12 +1,11 @@
 package generators
 
 import (
-	"errors"
 	"fmt"
 	"testing"
 
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
-	"github.com/hookboy/source/hookboy/internal"
 	p "github.com/hookboy/source/hookboy/prep/internal"
 )
 
@@ -50,24 +49,23 @@ func Test_Generate_ReturnsEmptyWhenAutoAddHooksIsNotSetToByFileName(t *testing.T
 func Test_Generate_ReturnsPropagatesError(t *testing.T) {
 	l := localHooksGenerator{}
 
-	expectedError := "SomeErrorForTest"
+	expectedError := "Error prepping hooks by filename"
 
 	_, _, err := l.Generate(conf.Configuration{
 		AutoAddHooks: conf.ByFileName,
-	}, func(string) ([]p.SimpleFile, error) {
-		return nil, errors.New(expectedError)
+	}, func(string) ([]p.SimpleFile, hookboy.Error) {
+		return nil, hookboy.NewError(expectedError)
 	})
 
-	castError := err.(internal.PrepError)
-	if castError.InternalError.Error() != expectedError {
+	if err.Error() != expectedError {
 		t.Error("Expected error to be propagated")
 	}
 }
 
 func Test_getHooksByFileName_PropogatesError(t *testing.T) {
-	someError := errors.New("SomeError")
+	someError := hookboy.NewError("SomeError")
 
-	errorReturningRead := func(dirname string) ([]p.SimpleFile, error) {
+	errorReturningRead := func(dirname string) ([]p.SimpleFile, hookboy.Error) {
 		return nil, someError
 	}
 
@@ -116,7 +114,7 @@ func Test_Generate_ReturnsFilesAsFound(t *testing.T) {
 		},
 	}
 
-	fileReturningRead := func(dirname string) ([]p.SimpleFile, error) {
+	fileReturningRead := func(dirname string) ([]p.SimpleFile, hookboy.Error) {
 		return filesToReturn, nil
 	}
 
@@ -164,7 +162,7 @@ func Test_getHooksByFileName_ReturnsFilesAsFound(t *testing.T) {
 		},
 	}
 
-	fileReturningRead := func(dirname string) ([]p.SimpleFile, error) {
+	fileReturningRead := func(dirname string) ([]p.SimpleFile, hookboy.Error) {
 		return filesToReturn, nil
 	}
 

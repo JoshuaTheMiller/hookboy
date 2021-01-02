@@ -1,6 +1,7 @@
 package source
 
 import (
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/conf/deserialization"
 )
@@ -21,7 +22,7 @@ func (l localFileReader) CanRead() bool {
 	return true
 }
 
-func (l localFileReader) Read() (conf.Configuration, error) {
+func (l localFileReader) Read() (conf.Configuration, hookboy.Error) {
 	rawFile, err := readFile(l.Path)
 
 	if err != nil {

@@ -1,6 +1,7 @@
 package source
 
 import (
+	"github.com/hookboy/source/hookboy"
 	"github.com/hookboy/source/hookboy/conf"
 	"github.com/hookboy/source/hookboy/internal"
 )
@@ -10,7 +11,7 @@ type configurationExposer struct {
 
 // LocateCurrentConfigurationSource can be used to help determine where current configuration is
 // coming from.
-func (c configurationExposer) LocateCurrentConfigurationSource() (internal.CurrentConfigurationSource, error) {
+func (c configurationExposer) LocateCurrentConfigurationSource() (internal.CurrentConfigurationSource, hookboy.Error) {
 	for _, reader := range configurationReaders {
 		var sourceExists = reader.CanRead()
 
@@ -22,13 +23,13 @@ func (c configurationExposer) LocateCurrentConfigurationSource() (internal.Curre
 		}
 	}
 
-	return internal.CurrentConfigurationSource{}, internal.NoConfigurationSourceFoundError
+	return internal.CurrentConfigurationSource{}, NoConfigurationSourceFoundError
 }
 
-// RetrieveCurrentConfiguration retrieves the current configuration, or returns an
-// error if no source of Configuration can be found or if there are issues with consuming
+// RetrieveCurrentConfiguration retrieves the current configuration, or returns a
+// hookboy.Error if no source of Configuration can be found or if there are issues with consuming
 // the configuration.
-func (c configurationExposer) RetrieveCurrentConfiguration() (conf.Configuration, error) {
+func (c configurationExposer) RetrieveCurrentConfiguration() (conf.Configuration, hookboy.Error) {
 	for _, reader := range configurationReaders {
 		var sourceExists = reader.CanRead()
 
@@ -37,5 +38,5 @@ func (c configurationExposer) RetrieveCurrentConfiguration() (conf.Configuration
 		}
 	}
 
-	return conf.Configuration{}, internal.NoConfigurationSourceFoundError
+	return conf.Configuration{}, NoConfigurationSourceFoundError
 }
