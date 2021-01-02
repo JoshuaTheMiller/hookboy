@@ -81,7 +81,7 @@ func Test_PrepareStatementFile_ConstructsAsExpected(t *testing.T) {
 		t.Errorf("Prepared statement file contents are incorrect.")
 	}
 
-	expectedPath := fmt.Sprintf("%s/.hookboy-cache/%s-statement", cachDir, hookname)
+	expectedPath := fmt.Sprintf("%s/%s-statement", cachDir, hookname)
 	actualPath := ftc[0].Path
 	if actualPath != expectedPath {
 		t.Errorf("Prepared statement file's path is incorrect (e '%s', a: '%s'", expectedPath, actualPath)

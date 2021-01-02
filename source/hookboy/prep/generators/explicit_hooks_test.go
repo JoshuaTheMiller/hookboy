@@ -100,7 +100,7 @@ func Test_CustomHook_Generate_ReturnsAsExpected(t *testing.T) {
 		t.Errorf("Expected AssociatedHook to be %s", expectedHook)
 	}
 
-	expectedPath := "/.hookboy-cache/commit-msg-statement"
+	expectedPath := "/commit-msg-statement"
 	actualPath := ftc[0].Path
 	if expectedPath != actualPath {
 		t.Errorf("Expected Path to be %s, received '%s'", expectedPath, actualPath)

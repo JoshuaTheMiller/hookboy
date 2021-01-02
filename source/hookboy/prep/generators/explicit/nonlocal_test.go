@@ -49,7 +49,7 @@ func Test_CustomHook_Generate_NonLocalFileReturnsExpectedNonLocalFile(t *testing
 		t.Error("Expected a file as one file was set")
 	}
 
-	var pathToDownloadTo = fmt.Sprintf("%s/.hookboy-cache/example-0", cachDir)
+	var pathToDownloadTo = fmt.Sprintf("%s/example-0", cachDir)
 	if ef[0].Path != pathToDownloadTo {
 		t.Error("File name is not as expected")
 	}

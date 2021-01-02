@@ -15,8 +15,9 @@ func TestDefaultsGetSet(t *testing.T) {
 		t.Errorf("Expected AutoAddHooks to be 'ByFileName', got '%s'", c.AutoAddHooks)
 	}
 
-	if c.CacheDirectory != ".git/hooks/" {
-		t.Errorf("Expected CacheDirectory to be '.git/hooks/', got '%s'", c.CacheDirectory)
+	expectedDefaultCacheDir := ".git/hooks/.hookboy-cache"
+	if c.CacheDirectory != expectedDefaultCacheDir {
+		t.Errorf("Expected CacheDirectory to be '%s', got '%s'", expectedDefaultCacheDir, c.CacheDirectory)
 	}
 }
 
@@ -27,7 +28,7 @@ func TestGetCacheDirectory(t *testing.T) {
 	}
 
 	var actual = c.GetCacheDirectory()
-	var expectedValue = "someDir/.hookboy-cache"
+	var expectedValue = cacheParentFolder
 	if actual != expectedValue {
 		t.Errorf("Expected value to be '%s', got '%s'", expectedValue, actual)
 	}

@@ -41,8 +41,7 @@ type Configuration struct {
 	LocalHookDir string `yaml:"localHookDir"`
 	// AutoAddHooks Defaults to ByFileName
 	AutoAddHooks AutoAddHooks `yaml:"autoAddHooks"`
-	// CacheDirectory defaults to '.git/hooks/'
-	// This is the path that the folder '.hookboy-cache' will be created
+	// CacheDirectory defaults to '.git/hooks/.hookboy-cache'
 	CacheDirectory string  `yaml:"cacheDirectory"`
 	Hooks          []Hooks `yaml:"hooks"`
 }
@@ -58,7 +57,7 @@ func (c *Configuration) SetDefaults() *Configuration {
 	}
 
 	if c.CacheDirectory == "" {
-		c.CacheDirectory = ".git/hooks/"
+		c.CacheDirectory = ".git/hooks/.hookboy-cache"
 	}
 
 	return c
@@ -66,5 +65,5 @@ func (c *Configuration) SetDefaults() *Configuration {
 
 // GetCacheDirectory returns the cache directory dictacted by the configuration
 func (c Configuration) GetCacheDirectory() string {
-	return c.CacheDirectory + "/.hookboy-cache"
+	return c.CacheDirectory
 }
