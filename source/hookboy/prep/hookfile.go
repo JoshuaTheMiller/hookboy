@@ -11,7 +11,7 @@ import (
 
 var fileTemplateString = `#!/bin/sh
 
-if [ -z "${hookboy_skip}" ] && [ ${hookboy_skip} = "true" ]
+if [ ! -z "${hookboy_skip}" ] && [ ${hookboy_skip} = "true" ]
 then
 LGray='\x1b[41m'
 NC='\x1b[0m'
