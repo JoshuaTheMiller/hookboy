@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/hookboy/source/hookboy/conf"
@@ -57,8 +58,15 @@ func Test_applier_InstallPropagatesFileError(t *testing.T) {
 	}
 
 	errorToReturn := errors.New("File writing failed")
+	writeCallCount := 0
 	errorReturningWrite := func(string, []byte, os.FileMode) error {
-		return errorToReturn
+		writeCallCount++
+
+		if writeCallCount > 1 {
+			return errorToReturn
+		}
+
+		return nil
 	}
 	nonErrorReturningFolderCreate := func(path string, perm os.FileMode) error {
 		return nil
@@ -87,10 +95,23 @@ func Test_applier_InstallPropagatesFolderError(t *testing.T) {
 	}
 
 	errorToReturn := errors.New("DoesNotMatter")
+	// How could I have written this such that the new code I wrote in this commit would
+	// not break the previous tests and functionality?
+	nonErrorReturningFileWrite := func(string, []byte, os.FileMode) error {
+		return nil
+	}
+	folderCreateCalledAmount := 0
 	errorReturningFolderCreate := func(path string, perm os.FileMode) error {
-		return errorToReturn
+		folderCreateCalledAmount++
+
+		if folderCreateCalledAmount > 1 {
+			return errorToReturn
+		}
+
+		return nil
 	}
 	var applier = applierboy{
+		writeFile:    nonErrorReturningFileWrite,
 		createFolder: errorReturningFolderCreate,
 		instantiated: true,
 	}
@@ -104,3 +125,48 @@ func Test_applier_InstallPropagatesFolderError(t *testing.T) {
 		return
 	}
 }
+
+func Test_writeInitialConfFile_GeneratesProperPathAndDefaultFile(t *testing.T) {
+	expectedPath := ".git/hooks"
+	expectedFileName := ".git/hooks/.hookboy-conf"
+	expectedStartOfContents := `{
+		"README": "These hooks have been wrangled by Hookboy!`
+
+	actualFileName := ""
+	actualContents := ""
+	var fileWriter = func(filename string, data []byte, perm os.FileMode) error {
+		actualFileName = filename
+		actualContents = string(data)
+		return nil
+	}
+
+	actualFolderPath := ""
+	var folderCreator = func(path string, perm os.FileMode) error {
+		actualFolderPath = path
+		return nil
+	}
+
+	err := writeInitialConfFile(folderCreator, fileWriter)
+
+	if err != nil {
+		t.Error("Expected err to be nil")
+		return
+	}
+
+	// Saying that this is "good enough"
+	// Could deserialize back to the actual object to see if everything was written as expected I suppose
+	if strings.HasPrefix(actualContents, expectedStartOfContents) {
+		t.Error("Contents are not as expected")
+	}
+
+	if actualFolderPath != expectedPath {
+		t.Error("Contents are not as expected")
+	}
+
+	if actualFileName != expectedFileName {
+		t.Error("Contents are not as expected")
+	}
+}
+
+type FileWriter func(filename string, data []byte, perm os.FileMode) error
+type FolderCreator func(path string, perm os.FileMode) error
