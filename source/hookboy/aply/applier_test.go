@@ -96,7 +96,7 @@ func Test_applier_InstallPropagatesFolderError(t *testing.T) {
 
 	errorToReturn := errors.New("DoesNotMatter")
 	// How could I have written this such that the new code I wrote in this commit would
-	// not break the previous tests and functionality?
+	// not break the previous tests and functionality? Decorator pattern could work
 	nonErrorReturningFileWrite := func(string, []byte, os.FileMode) error {
 		return nil
 	}
