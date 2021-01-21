@@ -46,6 +46,12 @@ Under normal circumstances, to "Install" a Hook, one would have to navigate to t
 * prepare-commit-msg
 * update
 
+---
+
+## Why another Git Hooks manager?
+
+## Motivation
+
 ## Other Tools
 
 * https://github.com/rycus86/githooks
@@ -55,6 +61,8 @@ Under normal circumstances, to "Install" a Hook, one would have to navigate to t
 * https://www.npmjs.com/package/node-hooks
 * https://pythonhosted.org/jig/
 * https://github.com/typicode/husky
+
+---
 
 ## Credit
 
